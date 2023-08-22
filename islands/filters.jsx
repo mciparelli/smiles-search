@@ -28,9 +28,8 @@ export default function Filtros({ onChange }) {
             <Disclosure.Button class="flex w-full justify-between rounded-lg bg-blue-100 px-4 py-2 text-left text-sm font-medium text-black-900 hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75">
               <span>Filtros</span>
               <ChevronUpIcon
-                class={`${
-                  open ? "" : "rotate-180 transform"
-                } h-5 w-5 text-black-500`}
+                class={`${open ? "" : "rotate-180 transform"
+                  } h-5 w-5 text-black-500`}
               />
             </Disclosure.Button>
             <Transition
@@ -44,7 +43,7 @@ export default function Filtros({ onChange }) {
             >
               <Disclosure.Panel
                 unmount={false}
-                class="p-4 grid grid-cols-3 gap-4 bg-blue-100 mt-2"
+                class="p-4 flex flex-col sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 bg-blue-100 mt-2 whitespace-nowrap"
               >
                 <Dropdown
                   name="airlines"
@@ -69,9 +68,8 @@ export default function Filtros({ onChange }) {
                         {({ selected }) => (
                           <>
                             <span
-                              class={`block truncate ${
-                                selected ? "font-medium" : "font-normal"
-                              }`}
+                              class={`block truncate ${selected ? "font-medium" : "font-normal"
+                                }`}
                             >
                               {airline.name}
                             </span>
@@ -154,7 +152,7 @@ export default function Filtros({ onChange }) {
                 </Dropdown>*/
                 }
                 <div class="flex gap-4">
-                  <label class="py-2">Duración máxima (en horas)</label>
+                  <label class="py-2">Max. horas</label>
                   <input
                     name="maxhours"
                     type="number"

@@ -1,7 +1,7 @@
 import { searchFlights } from "./smiles-api.js";
 import { formatDate, maxDate, minDate } from "./dates.js";
 
-function findFlightsForDate({ from, to, date, limit }) {
+function findFlightsForDate({ from, to, date }) {
   return searchFlights({
     originAirportCode: from,
     destinationAirportCode: to,
@@ -9,7 +9,7 @@ function findFlightsForDate({ from, to, date, limit }) {
   });
 }
 
-function findFlightsInMonth({ from, to, month, limit }) {
+function findFlightsInMonth({ from, to, month }) {
   let firstDay = new Date(month);
   firstDay.setHours(firstDay.getHours() + 3); // remove tz
   let currentDay = new Date(firstDay);
