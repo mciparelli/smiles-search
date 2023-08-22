@@ -6,8 +6,8 @@ const limiter = new Bottleneck({
   maxConcurrent: 20,
 });
 
-const fetch = limiter.wrap(FetchRetry(window.fetch, {
-  retryDelay: function (attempt, error, response) {
+const fetch = limiter.wrap(FetchRetry(globalThis.fetch, {
+  retryDelay: function (attempt, _error, _response) {
     return Math.pow(2, attempt) * 1000;
   },
   retryOn: async function (attempt, error, response) {
@@ -50,7 +50,7 @@ const headers = {
   region: "ARGENTINA",
 };
 
-async function getTax({ flightUid, fare }) {
+async function _getTax({ flightUid, fare }) {
   const params = new URLSearchParams({
     adults: "1",
     children: "0",

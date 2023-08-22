@@ -19,7 +19,7 @@ export default function MainForm({ params, onSubmit }) {
     <form
       class="flex flex-col gap-4 items-start"
       method="get"
-      onSubmit={async (event) => {
+      onSubmit={(event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
         const searchParams = Object.fromEntries(formData.entries());

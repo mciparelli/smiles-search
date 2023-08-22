@@ -142,9 +142,9 @@ const filtros = {
 };
 
 function filterFlights({ data: allFlights, monthSearch }, filters) {
-  const airlineCodes = Object.entries(filters).filter(([key, value]) =>
+  const airlineCodes = Object.entries(filters).filter(([key, _value]) =>
     key.startsWith("airlines") && key.endsWith("[id]")
-  ).map(([key, value]) => value);
+  ).map(([_key, value]) => value);
   const filterFunction = (someFlight) => {
     let cabinFilter = true,
       airlinesFilter = true,
