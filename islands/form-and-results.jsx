@@ -71,7 +71,7 @@ export default function FormAndResults({ params }) {
           }}
         />
       )}
-      {flightsSignal.value.status === 'not initiated' && !isLoading &&
+      {flightsSignal.value.status === "not initiated" && !isLoading &&
         (
           <p class="m-auto">
             Elija un origen, un destino y una fecha para buscar.
@@ -105,7 +105,7 @@ export default function FormAndResults({ params }) {
               </thead>
               <tbody>
                 {flights.map((flight, i) => {
-                  const bgColor = i % 2 === 0 ? "bg-white" : "bg-blue-200"; 
+                  const bgColor = i % 2 === 0 ? "bg-white" : "bg-blue-200";
                   return (
                     <tr
                       class="text-slate-500 whitespace-nowrap"
@@ -120,18 +120,26 @@ export default function FormAndResults({ params }) {
                           {flight.origin}-{flight.destination}
                         </a>
                       </td>
-                      <td class={`${bgColor} py-px-2`}>{formatFlightDate(flight.departureDate)}</td>
+                      <td class={`${bgColor} py-px-2`}>
+                        {formatFlightDate(flight.departureDate)}
+                      </td>
                       <td class={`${bgColor} px-2`}>{flight.airline.name}</td>
                       <td class={`${bgColor} px-2`}>
                         {filtros.cabinas.find((someCabina) =>
                           someCabina.id === flight.cabin
                         ).name}
                       </td>
-                      <td class={`${bgColor} px-2`}>{flight.stops || "Directo"}</td>
-                      <td class={`${bgColor} px-2`}>{flight.durationInHours}hs</td>
+                      <td class={`${bgColor} px-2`}>
+                        {flight.stops || "Directo"}
+                      </td>
+                      <td class={`${bgColor} px-2`}>
+                        {flight.durationInHours}hs
+                      </td>
                       <td class={`${bgColor} px-2`}>{flight.availableSeats}</td>
                       <td class={`${bgColor} px-2`}>
-                        {new Intl.NumberFormat("es-AR").format(flight.fare.miles)}
+                        {new Intl.NumberFormat("es-AR").format(
+                          flight.fare.miles,
+                        )}
                       </td>
                       <td class={`${bgColor} px-2`}>
                         {flight.fare.airlineTax

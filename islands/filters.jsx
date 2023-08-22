@@ -28,8 +28,9 @@ export default function Filtros({ onChange }) {
             <Disclosure.Button class="flex w-full justify-between rounded-lg bg-blue-100 px-4 py-2 text-left text-sm font-medium text-black-900 hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75">
               <span>Filtros</span>
               <ChevronUpIcon
-                class={`${open ? "" : "rotate-180 transform"
-                  } h-5 w-5 text-black-500`}
+                class={`${
+                  open ? "" : "rotate-180 transform"
+                } h-5 w-5 text-black-500`}
               />
             </Disclosure.Button>
             <Transition
@@ -68,8 +69,9 @@ export default function Filtros({ onChange }) {
                         {({ selected }) => (
                           <>
                             <span
-                              class={`block truncate ${selected ? "font-medium" : "font-normal"
-                                }`}
+                              class={`block truncate ${
+                                selected ? "font-medium" : "font-normal"
+                              }`}
                             >
                               {airline.name}
                             </span>
