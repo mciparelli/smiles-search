@@ -51,7 +51,7 @@ export default function MainForm({ params, onSubmit }) {
           autoFocus
         />
       </fieldset>
-      <fieldset class="flex gap-2 my-2">
+      <fieldset class="flex flex-col gap-2 my-2">
         <MonthSearchSwitch signal={monthSearch} />
         {monthSearch.value
           ? <MonthsDropdown class="w-64" defaultValue={params["month[id]"]} />
