@@ -26,7 +26,7 @@ function sortByMilesAndTaxes(flightList) {
   return flightList.sort(
     (a, b) => {
       if (a.fare.miles === b.fare.miles) {
-        return a.fare.tax.miles - b.fare.tax.miles;
+        return a.fare.airlineTax - b.fare.airlineTax;
       }
       return a.fare.miles - b.fare.miles;
     },

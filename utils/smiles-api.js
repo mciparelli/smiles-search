@@ -99,7 +99,7 @@ async function searchFlights(paramsObject) {
           airlineTax: Math.floor(fare.airlineTax / 1000),
           miles: fare.miles,
           money: fare.money,
-          tax: await getTax({ flightUid: someFlight.uid, fare }),
+          // tax: await getTax({ flightUid: someFlight.uid, fare }),
           type: someFlight.sourceFare,
         },
         departureDate: new Date(someFlight.departure.date),

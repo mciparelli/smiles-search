@@ -131,7 +131,11 @@ export default function FormAndResults({ params }) {
                     <td>
                       {new Intl.NumberFormat("es-AR").format(flight.fare.miles)}
                     </td>
-                    <td>${Math.floor(flight.fare.tax.money / 1000)}K</td>
+                    <td>
+                      {flight.fare.airlineTax
+                        ? `$${flight.fare.airlineTax}K`
+                        : "?"}
+                    </td>
                   </tr>
                 );
               })}
