@@ -103,8 +103,8 @@ export default function FormAndResults({ params }) {
           <div class="max-w-[100vw] overflow-x-auto border border-gray-900">
             <table class="table-auto text-sm text-center min-w-[fit-content] w-full">
               <thead class="font-bold text-slate-400">
-                <tr class="border-b z-[-1]">
-                  <th class="py-4 bg-blue-400 sticky left-0">Tramo</th>
+                <tr>
+                  <th class="py-4 bg-blue-400">Tramo</th>
                   <th class="bg-blue-400">Fecha y hora</th>
                   <th class="bg-blue-400">Aerolínea</th>
                   <th class="bg-blue-400">Cabina</th>
@@ -123,7 +123,7 @@ export default function FormAndResults({ params }) {
                       class="text-slate-500 whitespace-nowrap"
                       key={flight.uid}
                     >
-                      <td class={`${bgColor} py-4 px-2 sticky left-0`}>
+                      <td class={`${bgColor} py-4 px-2`}>
                         <a
                           class="text-blue-500"
                           target="_blank"
