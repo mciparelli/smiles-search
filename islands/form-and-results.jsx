@@ -14,42 +14,50 @@ import Spinner from "components/spinner.jsx";
 const flightsSignal = signal({ status: "not initiated", data: null });
 
 async function onSubmit(searchParams) {
-  const shouldFetch = searchParams.originAirportCode &&
-    searchParams.destinationAirportCode;
-  if (!shouldFetch) return null;
-  flightsSignal.value = { status: "loading", data: null };
-  const urlParams = new URLSearchParams(searchParams);
-  history.replaceState(null, "", "?" + urlParams.toString());
-  let flights = null;
-  const month = searchParams["month[id]"];
-  const monthSearch = Boolean(month);
-  if (monthSearch) {
-    let monthFlights = await findFlightsInMonth({
-      from: searchParams.originAirportCode,
-      to: searchParams.destinationAirportCode,
-      month,
-    });
-    flights = monthFlights;
-  } else {
-    flights = await findFlightsForDate({
-      from: searchParams.originAirportCode,
-      to: searchParams.destinationAirportCode,
-      date: searchParams.departureDate,
-    });
+  try {
+    const shouldFetch = searchParams.originAirportCode &&
+      searchParams.destinationAirportCode;
+    if (!shouldFetch) return null;
+    flightsSignal.value = { status: "loading", data: null };
+    const urlParams = new URLSearchParams(searchParams);
+    history.replaceState(null, "", "?" + urlParams.toString());
+    let flights = null;
+    const month = searchParams["month[id]"];
+    const monthSearch = Boolean(month);
+    if (monthSearch) {
+      let monthFlights = await findFlightsInMonth({
+        from: searchParams.originAirportCode,
+        to: searchParams.destinationAirportCode,
+        month,
+      });
+      flights = monthFlights;
+    } else {
+      flights = await findFlightsForDate({
+        from: searchParams.originAirportCode,
+        to: searchParams.destinationAirportCode,
+        date: searchParams.departureDate,
+      });
+    }
+    let filtered = monthSearch
+      ? flights.map((dayFlights) => dayFlights?.[0]).filter(Boolean)
+      : flights;
+    if (filtered) {
+      filtered = sortByMilesAndTaxes(filtered);
+      filtered = filtered.slice(0, filtros.defaults.results);
+    }
+    flightsSignal.value = {
+      status: "finished",
+      data: flights,
+      monthSearch,
+      filtered,
+    };
+  } catch (err) {
+    flightsSignal.value = {
+      status: "finished",
+      data: null,
+      error: err.message,
+    };
   }
-  let filtered = monthSearch
-    ? flights.map((dayFlights) => dayFlights?.[0]).filter(Boolean)
-    : flights;
-  if (filtered) {
-    filtered = sortByMilesAndTaxes(filtered);
-    filtered = filtered.slice(0, filtros.defaults.results);
-  }
-  flightsSignal.value = {
-    status: "loaded",
-    data: flights,
-    monthSearch,
-    filtered,
-  };
 }
 
 export default function FormAndResults({ params }) {
@@ -82,6 +90,10 @@ export default function FormAndResults({ params }) {
           <Spinner />
           <p class="my-4">Buscando resultados</p>
         </div>
+      )}
+      {Boolean(flightsSignal.value.error) &&
+        flightsSignal.value.status === "finished" && (
+        <p class="m-auto">{flightsSignal.value.error}</p>
       )}
       {(flights === null || flights?.length === 0) && (
         <p class="m-auto">No se encontraron vuelos para este tramo.</p>

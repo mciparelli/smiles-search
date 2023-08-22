@@ -14,11 +14,10 @@ const fetch = limiter.wrap(FetchRetry(globalThis.fetch, {
     if (attempt > 3) return false;
     const { status } = response;
     if (status === 452) {
-      const { errorCode } = await response.json();
-      if (errorCode !== "113") {
-        console.log(`retrying, attempt number ${attempt + 1}`);
-        return true;
-      }
+      const { error: errorMessage } = await response.json();
+      if (!errorMessage.startsWith("TypeError")) throw new Error(errorMessage);
+      console.log(`retrying, attempt number ${attempt + 1}`);
+      return true;
     }
     // retry on any network error, or 5xx status codes
     if (error !== null || status >= 500) {
