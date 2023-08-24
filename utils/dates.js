@@ -2,7 +2,14 @@ function formatDate(date) {
   return date.toISOString().split("T")[0];
 }
 
-function formatFlightDate(flightDate) {
+function formatFlightDateShort(flightDate) {
+  return new Intl.DateTimeFormat("es-AR", {
+    day: "numeric",
+    month: "numeric"
+  }).format(flightDate)
+}
+
+function formatFlightDateLong(flightDate) {
   return new Intl.DateTimeFormat("es-AR", {
     day: "numeric",
     month: "short",
@@ -39,7 +46,8 @@ maxDate.setDate(maxDate.getDate() + 361);
 
 export {
   formatDate,
-  formatFlightDate,
+  formatFlightDateShort,
+  formatFlightDateLong,
   formatMonth,
   maxDate,
   minDate,

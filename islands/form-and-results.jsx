@@ -1,5 +1,5 @@
 import { signal, useSignal } from "@preact/signals";
-import { formatFlightDate } from "utils/dates.js";
+import { formatFlightDateShort, formatFlightDateLong } from "utils/dates.js";
 import {
   filterFlights,
   filtros,
@@ -93,26 +93,27 @@ export default function FormAndResults({ params }) {
       )}
       {Boolean(flightsSignal.value.error) &&
         flightsSignal.value.status === "finished" && (
-        <p class="m-auto">{flightsSignal.value.error}</p>
-      )}
+          <p class="m-auto">{flightsSignal.value.error}</p>
+        )}
       {(flights === null || flights?.length === 0) && (
         <p class="m-auto">No se encontraron vuelos para este tramo.</p>
       )}
       {flights?.length > 0 && !isLoading &&
         (
           <div class="max-w-[100vw] overflow-x-auto border border-gray-900">
-            <table class="table-auto text-sm text-center min-w-[fit-content] w-full">
+            <table class="table-auto text-sm text-center min-w-[fit-content] w-full whitespace-nowrap">
               <thead class="font-bold text-slate-400">
                 <tr>
-                  <th class="py-4 bg-blue-400">Tramo</th>
-                  <th class="bg-blue-400">Fecha y hora</th>
-                  <th class="bg-blue-400">Aerolínea</th>
-                  <th class="bg-blue-400">Cabina</th>
-                  <th class="bg-blue-400">Escalas</th>
-                  <th class="bg-blue-400">Duración</th>
-                  <th class="bg-blue-400">Asientos</th>
-                  <th class="bg-blue-400">Millas</th>
-                  <th class="bg-blue-400">Tasas</th>
+                  <th class="py-4 bg-blue-400 px-2">Tramo</th>
+                  <th class="bg-blue-400 px-2">Fecha y hora</th>
+                  <th class="bg-blue-400 px-2 lg:hidden">Millas</th>
+                  <th class="bg-blue-400 px-2">Aerolínea</th>
+                  <th class="bg-blue-400 px-2">Cabina</th>
+                  <th class="bg-blue-400 px-2">Escalas</th>
+                  <th class="bg-blue-400 px-2">Duración</th>
+                  <th class="bg-blue-400 px-2">Asientos</th>
+                  <th class="bg-blue-400 px-2 hidden lg:table-cell">Millas</th>
+                  <th class="bg-blue-400 px-2">Tasas</th>
                 </tr>
               </thead>
               <tbody>
@@ -132,8 +133,16 @@ export default function FormAndResults({ params }) {
                           {flight.origin}-{flight.destination}
                         </a>
                       </td>
-                      <td class={`${bgColor} py-px-2`}>
-                        {formatFlightDate(flight.departureDate)}
+                      <td class={`${bgColor} py-px-2 md:hidden`}>
+                        {formatFlightDateShort(flight.departureDate)}
+                      </td>
+                      <td class={`${bgColor} py-px-2 hidden md:table-cell`}>
+                        {formatFlightDateLong(flight.departureDate)}
+                      </td>
+                      <td class={`${bgColor} px-2 lg:hidden`}>
+                        {new Intl.NumberFormat("es-AR").format(
+                          flight.fare.miles,
+                        )}
                       </td>
                       <td class={`${bgColor} px-2`}>{flight.airline.name}</td>
                       <td class={`${bgColor} px-2`}>
@@ -148,7 +157,7 @@ export default function FormAndResults({ params }) {
                         {flight.durationInHours}hs
                       </td>
                       <td class={`${bgColor} px-2`}>{flight.availableSeats}</td>
-                      <td class={`${bgColor} px-2`}>
+                      <td class={`${bgColor} px-2 hidden lg:table-cell`}>
                         {new Intl.NumberFormat("es-AR").format(
                           flight.fare.miles,
                         )}
