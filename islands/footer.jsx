@@ -1,3 +1,4 @@
+import { asset } from "$fresh/runtime.ts";
 import { effect, signal } from "@preact/signals";
 import ConfettiExplosion from "react-confetti-explosion";
 
@@ -18,7 +19,7 @@ function Link({ children, href }) {
 export default function Footer() {
   return (
     <>
-      <footer class="px-4 py-2 gap-4 w-full text-xs italic flex justify-between">
+      <footer class="px-4 py-2 gap-4 w-full text-xs italic flex justify-between items-center">
         <div>
           {showConfetti.value === "not initiated" && (
             <button
@@ -55,7 +56,8 @@ export default function Footer() {
             </>
           )}
         </div>
-        <div>&nbsp;</div>
+        <a href="https://github.com/mciparelli/smiles-search" target="_blank">
+          <img width={36} src="/github-mark.svg" /></a>
       </footer>
     </>
   );
