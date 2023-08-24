@@ -19,7 +19,7 @@ function Link({ children, href }) {
 export default function Footer() {
   return (
     <>
-      <footer class="px-4 py-2 gap-4 w-full text-xs italic flex justify-between items-center">
+      <footer class="px-4 py-2 gap-4 w-full text-xs italic flex justify-between items-end">
         <div>
           {showConfetti.value === "not initiated" && (
             <button
@@ -56,7 +56,7 @@ export default function Footer() {
             </>
           )}
         </div>
-        <a href="https://github.com/mciparelli/smiles-search" target="_blank">
+        <a href="https://github.com/mciparelli/smiles-search" target="_blank" class="flex-shrink-0">
           <img width={36} src="/github-mark.svg" /></a>
       </footer>
     </>
