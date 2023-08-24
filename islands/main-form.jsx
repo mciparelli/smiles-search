@@ -9,6 +9,7 @@ import {
   months,
   today,
 } from "utils/dates.js";
+import { filtros } from 'utils/flight.js';
 import { findFlightsForDate, findFlightsInMonth } from "api";
 import MonthSearchSwitch from "components/month-search-switch.jsx";
 import MonthsDropdown from "components/months-dropdown.jsx";
@@ -36,7 +37,7 @@ export default function MainForm({ params, onSubmit }) {
           placeholder="Desde"
           maxLength={3}
           onInput={(ev) => ev.target.value = ev.target.value.toUpperCase()}
-          value={params.originAirportCode ?? "BUE"}
+          value={params.originAirportCode ?? filtros.defaults.originAirportCode}
         />
         <input
           name="destinationAirportCode"

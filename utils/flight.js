@@ -132,6 +132,7 @@ const filtros = {
   smilesAndMoney,
   tarifas,
   defaults: {
+    originAirportCode: 'EZE',
     cabina: cabinas[0],
     airlineCodes: [],
     results: 10,
