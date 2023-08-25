@@ -11,7 +11,7 @@ function Dropdown(props) {
       as="div"
       onChange={() => {
         const event = new Event("change");
-        requestIdleCallback(() => {
+        requestAnimationFrame(() => {
           ref.current.closest("form").dispatchEvent(event);
         });
       }}
