@@ -12,7 +12,7 @@ const fetch = limiter.wrap(FetchRetry(globalThis.fetch, {
   },
   retryOn: async function (attempt, error, response) {
     if (attempt > 3) return false;
-    const { status } = response;
+    const status = response?.status;
     if (status === 452) {
       const { error: errorMessage } = await response.json();
       if (!errorMessage.startsWith("TypeError")) throw new Error(errorMessage);
