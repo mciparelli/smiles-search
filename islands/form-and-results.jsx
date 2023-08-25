@@ -1,29 +1,29 @@
 import { signal, useSignal } from "@preact/signals";
-import { formatFlightDateShort, formatFlightDateLong } from "utils/dates.js";
+import { formatFlightDateLong, formatFlightDateShort } from "utils/dates.js";
 import {
   filterFlights,
   filtros,
   getLink,
   sortByMilesAndTaxes,
 } from "utils/flight.js";
+import { requestsSignal } from "utils/signals.js";
 import { apiPath, findFlightsForDate, findFlightsInMonth } from "api";
 import MainForm from "./main-form.jsx";
 import Filters from "./filters.jsx";
 import Spinner from "components/spinner.jsx";
-
-const flightsSignal = signal({ status: "not initiated", data: null });
+import { CheckIcon } from "icons";
 
 async function onSubmit(searchParams) {
   try {
     const shouldFetch = searchParams.originAirportCode &&
       searchParams.destinationAirportCode;
     if (!shouldFetch) return null;
-    flightsSignal.value = { status: "loading", data: null };
     const urlParams = new URLSearchParams(searchParams);
     history.replaceState(null, "", "?" + urlParams.toString());
     let flights = null;
     const month = searchParams["month[id]"];
     const monthSearch = Boolean(month);
+    requestsSignal.value = { status: "loading", requests: {} };
     if (monthSearch) {
       let monthFlights = await findFlightsInMonth({
         from: searchParams.originAirportCode,
@@ -45,14 +45,13 @@ async function onSubmit(searchParams) {
       filtered = sortByMilesAndTaxes(filtered);
       filtered = filtered.slice(0, filtros.defaults.results);
     }
-    flightsSignal.value = {
+    requestsSignal.value = {
       status: "finished",
       data: flights,
-      monthSearch,
       filtered,
     };
   } catch (err) {
-    flightsSignal.value = {
+    requestsSignal.value = {
       status: "finished",
       data: null,
       error: err.message,
@@ -61,25 +60,32 @@ async function onSubmit(searchParams) {
 }
 
 export default function FormAndResults({ params }) {
-  const flights = flightsSignal.value.filtered;
-  const isLoading = flightsSignal.value.status === "loading";
+  const flights = requestsSignal.value.filtered;
+  const isLoading = requestsSignal.value.status === "loading";
+  const monthSearchSignal = useSignal(!params.departureDate);
+  console.log(requestsSignal.value);
   return (
     <div class="p-4 gap-4 flex flex-col flex-grow-[1]">
       <MainForm
         params={params}
         onSubmit={onSubmit}
+        monthSearchSignal={monthSearchSignal}
       />
-      {flightsSignal.value.data?.length > 0 && !isLoading && (
+      {requestsSignal.value.data?.length > 0 && !isLoading && (
         <Filters
           onChange={(newFilters) => {
-            flightsSignal.value = {
-              ...flightsSignal.value,
-              filtered: filterFlights(flightsSignal.value, newFilters),
+            requestsSignal.value = {
+              ...requestsSignal.value,
+              filtered: filterFlights({
+                allFlights: requestsSignal.value.data,
+                monthSearch: monthSearchSignal.value,
+                filters: newFilters,
+              }),
             };
           }}
         />
       )}
-      {flightsSignal.value.status === "not initiated" && !isLoading &&
+      {requestsSignal.value.status === "not initiated" &&
         (
           <p class="m-auto">
             Elija un origen, un destino y una fecha para buscar.
@@ -87,14 +93,22 @@ export default function FormAndResults({ params }) {
         )}
       {isLoading && (
         <div class="m-auto flex flex-col items-center">
-          <Spinner />
-          <p class="my-4">Buscando resultados</p>
+          {Object.entries(requestsSignal.value.requests).map((
+            [description, status],
+          ) => (
+            <div class="items-center flex gap-2 my-2" key={description}>
+              <p>{description}</p>
+              {status === "done"
+                ? <CheckIcon class="text-green-500 w-5" />
+                : <Spinner />}
+            </div>
+          ))}
         </div>
       )}
-      {Boolean(flightsSignal.value.error) &&
-        flightsSignal.value.status === "finished" && (
-          <p class="m-auto">{flightsSignal.value.error}</p>
-        )}
+      {Boolean(requestsSignal.value.error) &&
+        requestsSignal.value.status === "finished" && (
+        <p class="m-auto">{requestsSignal.value.error}</p>
+      )}
       {(flights === null || flights?.length === 0) && (
         <p class="m-auto">No se encontraron vuelos para este tramo.</p>
       )}

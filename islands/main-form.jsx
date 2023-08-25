@@ -1,6 +1,5 @@
 import { Switch } from "@headlessui/react";
 import Dropdown from "components/dropdown.jsx";
-import { useSignal } from "@preact/signals";
 import {
   formatDate,
   formatMonth,
@@ -9,13 +8,12 @@ import {
   months,
   today,
 } from "utils/dates.js";
-import { filtros } from 'utils/flight.js';
+import { filtros } from "utils/flight.js";
 import { findFlightsForDate, findFlightsInMonth } from "api";
 import MonthSearchSwitch from "components/month-search-switch.jsx";
 import MonthsDropdown from "components/months-dropdown.jsx";
 
-export default function MainForm({ params, onSubmit }) {
-  const monthSearch = useSignal(!params.departureDate);
+export default function MainForm({ params, monthSearchSignal, onSubmit }) {
   return (
     <form
       class="flex flex-col gap-4 items-start"
@@ -53,8 +51,8 @@ export default function MainForm({ params, onSubmit }) {
         />
       </fieldset>
       <fieldset class="flex flex-col gap-2 my-2">
-        <MonthSearchSwitch signal={monthSearch} />
-        {monthSearch.value
+        <MonthSearchSwitch signal={monthSearchSignal} />
+        {monthSearchSignal.value
           ? <MonthsDropdown class="w-64" defaultValue={params["month[id]"]} />
           : (
             <input

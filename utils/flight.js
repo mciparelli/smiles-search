@@ -132,7 +132,7 @@ const filtros = {
   smilesAndMoney,
   tarifas,
   defaults: {
-    originAirportCode: 'EZE',
+    originAirportCode: "EZE",
     cabina: cabinas[0],
     airlineCodes: [],
     results: 10,
@@ -142,7 +142,7 @@ const filtros = {
   },
 };
 
-function filterFlights({ data: allFlights, monthSearch }, filters) {
+function filterFlights({ allFlights, monthSearch, filters }) {
   const airlineCodes = Object.entries(filters).filter(([key, _value]) =>
     key.startsWith("airlines") && key.endsWith("[id]")
   ).map(([_key, value]) => value);

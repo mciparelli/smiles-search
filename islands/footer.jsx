@@ -56,8 +56,13 @@ export default function Footer() {
             </>
           )}
         </div>
-        <a href="https://github.com/mciparelli/smiles-search" target="_blank" class="flex-shrink-0">
-          <img width={36} src="/github-mark.svg" /></a>
+        <a
+          href="https://github.com/mciparelli/smiles-search"
+          target="_blank"
+          class="flex-shrink-0"
+        >
+          <img width={36} src="/github-mark.svg" />
+        </a>
       </footer>
     </>
   );

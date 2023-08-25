@@ -1,11 +1,24 @@
 import { searchFlights } from "./smiles-api.js";
-import { formatDate, maxDate, minDate } from "./dates.js";
+import {
+  formatDate,
+  maxDate,
+  minDate,
+} from "./dates.js";
+import { requestsSignal } from "./signals.js";
+import { clone } from "./object.js";
 
 function findFlightsForDate({ from, to, date }) {
+  const requestKey = `${from}-${to} ${date}`;
+  requestsSignal.value.requests[requestKey] = "loading";
+  requestsSignal.value = clone(requestsSignal.value);
   return searchFlights({
     originAirportCode: from,
     destinationAirportCode: to,
     departureDate: date,
+  }).then((result) => {
+    requestsSignal.value.requests[requestKey] = "done";
+    requestsSignal.value = clone(requestsSignal.value);
+    return result;
   });
 }
 
