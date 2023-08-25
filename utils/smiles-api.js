@@ -62,7 +62,7 @@ async function _getTax({ flightUid, fare }) {
 
   const response = await fetch(
     "https://api-airlines-boarding-tax-prd.smiles.com.br/v1/airlines/flight/boardingtax?" +
-      params.toString(),
+    params.toString(),
     {
       headers,
     },
@@ -75,7 +75,7 @@ async function searchFlights(paramsObject) {
   const params = new URLSearchParams({ ...defaultParams, ...paramsObject });
   const response = await fetch(
     "https://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search?" +
-      params.toString(),
+    params.toString(),
     {
       headers,
     },
@@ -83,6 +83,11 @@ async function searchFlights(paramsObject) {
   const { requestedFlightSegmentList: [{ flightList }] } = await response
     .json();
   if (flightList.length === 0) return null;
+  requestsSignal.value = {
+    ...requestsSignal.value,
+    message:
+      `${paramsObject.originAirportCode}-${paramsObject.destinationAirportCode} ${paramsObject.departureDate}`,
+  };
   const FARE_TYPE = fares.club;
   const transformedFlights = await Promise.all(
     flightList.map(async (someFlight) => {

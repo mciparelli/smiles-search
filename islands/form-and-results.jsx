@@ -23,7 +23,7 @@ async function onSubmit(searchParams) {
     let flights = null;
     const month = searchParams["month[id]"];
     const monthSearch = Boolean(month);
-    requestsSignal.value = { status: "loading", requests: {} };
+    requestsSignal.value = { status: "loading" };
     if (monthSearch) {
       let monthFlights = await findFlightsInMonth({
         from: searchParams.originAirportCode,
@@ -63,7 +63,6 @@ export default function FormAndResults({ params }) {
   const flights = requestsSignal.value.filtered;
   const isLoading = requestsSignal.value.status === "loading";
   const monthSearchSignal = useSignal(!params.departureDate);
-  console.log(requestsSignal.value);
   return (
     <div class="p-4 gap-4 flex flex-col flex-grow-[1]">
       <MainForm
@@ -93,16 +92,12 @@ export default function FormAndResults({ params }) {
         )}
       {isLoading && (
         <div class="m-auto flex flex-col items-center">
-          {Object.entries(requestsSignal.value.requests).map((
-            [description, status],
-          ) => (
-            <div class="items-center flex gap-2 my-2" key={description}>
-              <p>{description}</p>
-              {status === "done"
-                ? <CheckIcon class="text-green-500 w-5" />
-                : <Spinner />}
-            </div>
-          ))}
+          <Spinner />
+          <p class="my-4">
+            Buscando resultados {requestsSignal.value.message
+              ? `(${requestsSignal.value.message})`
+              : ""}
+          </p>
         </div>
       )}
       {Boolean(requestsSignal.value.error) &&
