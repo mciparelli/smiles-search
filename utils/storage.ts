@@ -19,7 +19,7 @@ interface CustomStorage {
  */
 function persistedSignal<T>(
   initialValue: T,
-  key: string
+  key: string,
 ) {
   const sig = signal(initialValue);
   let skipSave = true;
@@ -52,7 +52,7 @@ function persistedSignal<T>(
       if (ev.key === key) load();
     });
   }
-  if (IS_BROWSER) { 
+  if (IS_BROWSER) {
     load();
   }
   return sig;

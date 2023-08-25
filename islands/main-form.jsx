@@ -8,40 +8,21 @@ import {
   months,
   today,
 } from "utils/dates.js";
-import { filtros } from "utils/flight.js";
 import { findFlightsForDate, findFlightsInMonth } from "api";
 import MonthSearchSwitch from "components/month-search-switch.jsx";
 import MonthsDropdown from "components/months-dropdown.jsx";
-import { InformationCircleIcon } from "icons";
-import { concurrencySignal } from "utils/signals.js";
-
-function ConsultasEnSimultaneo({ class: className = "" }) {
-  return (
-    <label
-      title="Un número de consultas en simultáneo demasiado alto podría causar un bloqueo temporario por parte de Smiles. Un número de consultas en simultáneo demasiado bajo podría causar mayores demoras en las búsquedas, especialmente en búsquedas por regiones."
-      class={`flex ml-auto gap-2 items-center ${className}`}
-    >
-      <InformationCircleIcon class="w-5" />Consultas en simultáneo<input
-        type="number"
-        name="concurrency"
-        value={String(concurrencySignal.value)}
-        onChange={(ev) => {
-          const newValue = Number(ev.target.value);
-          if (newValue < 1 || newValue > 20) {
-            concurrencySignal.value = 20;
-            return;
-          }
-          concurrencySignal.value = newValue;
-        }}
-        class="w-20 shadow-md px-2 rounded-sm h-10 invalid:border invalid:border-red-400"
-        max="20"
-        min="1"
-      />
-    </label>
-  );
-}
+import SearchTypeDropdown from "components/search-type-dropdown.jsx";
+import OriginDestinationInputs from "components/origin-destination-inputs.jsx";
+import { useSignal } from "@preact/signals";
+import { filtros } from "utils/flight.js";
 
 export default function MainForm({ params, monthSearchSignal, onSubmit }) {
+  const searchTypeSignal = useSignal(
+    params["search_type[id]"] ?? filtros.defaults.searchTypes.id,
+  );
+  const searchType = filtros.searchTypes.find((someSearchType) =>
+    someSearchType.id === searchTypeSignal.value
+  );
   return (
     <form
       class="flex flex-col gap-4 items-start"
@@ -53,33 +34,15 @@ export default function MainForm({ params, monthSearchSignal, onSubmit }) {
         onSubmit(searchParams);
       }}
     >
-      <ConsultasEnSimultaneo class="sm:hidden" />
-      <fieldset class="group flex gap-2 w-full">
-        <input
-          name="originAirportCode"
-          required
-          type="text"
-          pattern="[a-zA-Z]{3}"
-          class="shadow-md px-2 h-10 w-20 rounded-sm"
-          placeholder="Desde"
-          maxLength={3}
-          onInput={(ev) => ev.target.value = ev.target.value.toUpperCase()}
-          value={params.originAirportCode ?? filtros.defaults.originAirportCode}
-        />
-        <input
-          name="destinationAirportCode"
-          required
-          type="text"
-          pattern="[a-zA-Z]{3}"
-          class="shadow-md px-2 h-10 w-20 rounded-sm"
-          placeholder="Hacia"
-          maxLength={3}
-          onInput={(ev) => ev.target.value = ev.target.value.toUpperCase()}
-          value={params.destinationAirportCode}
-          autoFocus
-        />
-        <ConsultasEnSimultaneo class="hidden sm:flex" />
-      </fieldset>
+      <SearchTypeDropdown
+        class="w-64"
+        value={searchType}
+        onChange={(selected) => searchTypeSignal.value = selected.id}
+      />
+      <OriginDestinationInputs
+        defaults={params}
+        searchType={searchTypeSignal.value}
+      />
       <fieldset class="flex flex-col gap-2 my-2">
         <MonthSearchSwitch signal={monthSearchSignal} />
         {monthSearchSignal.value

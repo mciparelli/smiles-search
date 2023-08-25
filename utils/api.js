@@ -1,15 +1,28 @@
 import { searchFlights } from "./smiles-api.js";
 import { formatDate, maxDate, minDate } from "./dates.js";
+import { sortByMilesAndTaxes } from "./flight.js";
 
-function findFlightsForDate({ from, to, date }) {
-  return searchFlights({
-    originAirportCode: from,
-    destinationAirportCode: to,
-    departureDate: date,
-  });
+async function findFlightsForDate({ from, regionFrom, to, regionTo, date }) {
+  let flightPromises = [];
+  let fromAirports = from ? [from] : regionFrom.airports;
+  let toAirports = to ? [to] : regionTo.airports;
+  for (const airportFrom of fromAirports) {
+    for (const airportTo of toAirports) {
+      flightPromises = [
+        ...flightPromises,
+        searchFlights({
+          originAirportCode: airportFrom,
+          destinationAirportCode: airportTo,
+          departureDate: date,
+        }),
+      ];
+    }
+  }
+  const allFlightsArray = await Promise.all(flightPromises);
+  return sortByMilesAndTaxes(allFlightsArray.flat().filter(Boolean));
 }
 
-function findFlightsInMonth({ from, to, month }) {
+function findFlightsInMonth({ from, regionFrom, to, regionTo, month }) {
   let firstDay = new Date(month);
   firstDay.setHours(firstDay.getHours() + 3); // remove tz
   let currentDay = new Date(firstDay);
@@ -18,9 +31,10 @@ function findFlightsInMonth({ from, to, month }) {
     if (minDate <= currentDay && maxDate >= currentDay) {
       const dayFlightsPromise = findFlightsForDate({
         from,
+        regionFrom,
         to,
+        regionTo,
         date: formatDate(currentDay),
-        limit: 1,
       });
       flightPromises = [...flightPromises, dayFlightsPromise];
     }

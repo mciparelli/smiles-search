@@ -1,7 +1,7 @@
 import FetchRetry from "fetch-retry";
 import Bottleneck from "bottleneck";
 import { effect } from "@preact/signals";
-import { fares, sortByMilesAndTaxes, tripTypes } from "./flight.js";
+import { fares, tripTypes } from "./flight.js";
 import {
   abortControllersSignal,
   concurrencySignal,
@@ -131,7 +131,7 @@ async function searchFlights(paramsObject) {
       };
     }),
   );
-  return sortByMilesAndTaxes(transformedFlights);
+  return transformedFlights;
 }
 
 export { searchFlights };

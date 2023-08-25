@@ -124,6 +124,12 @@ const smilesAndMoney = [{ id: "", name: "Sólo millas" }, {
   id: "1",
   name: "Smiles and Money",
 }];
+const searchTypes = [
+  { id: "airports", name: "Aeropuertos y ciudades" },
+  { id: "from-airport-to-region", name: "De aeropuerto a región" },
+  { id: "from-region-to-airport", name: "De región a aeropuerto" },
+  { id: "from-region-to-region", name: "De región a región" },
+];
 
 const filtros = {
   cabinas,
@@ -132,6 +138,7 @@ const filtros = {
   viajeFacil,
   vuelosABrasil,
   smilesAndMoney,
+  searchTypes,
   tarifas,
   defaults: {
     originAirportCode: "EZE",
@@ -140,6 +147,7 @@ const filtros = {
     escalas: escalas[0],
     viajeFacil: viajeFacil[0],
     tarifas: tarifas[0],
+    searchTypes: searchTypes[0],
   },
 };
 

@@ -16,12 +16,39 @@ import MainForm from "./main-form.jsx";
 import Filters from "./filters.jsx";
 import Spinner from "components/spinner.jsx";
 import { CheckIcon } from "icons";
+import ConsultasEnSimultaneo from "components/simultaneous-searches-input.jsx";
+import Regions from "components/regions.jsx";
+import { regionsSignal } from "utils/signals.js";
 
 async function onSubmit(searchParams) {
   try {
-    const shouldFetch = searchParams.originAirportCode &&
-      searchParams.destinationAirportCode;
+    let shouldFetch = true,
+      regionFrom = searchParams["region_from"]
+        ? regionsSignal.value.find((someRegion) =>
+          someRegion.name === searchParams["region_from"]
+        )
+        : null,
+      regionTo = searchParams["region_to"]
+        ? regionsSignal.value.find((someRegion) =>
+          someRegion.name === searchParams["region_to"]
+        )
+        : null;
+    if (searchParams["search_type[id]"] === "from-region-to-airport") {
+      shouldFetch = searchParams["region_from"] &&
+        searchParams.destinationAirportCode && regionFrom?.airports[0];
+    } else if (searchParams["search_type[id]"] === "airports") {
+      shouldFetch = searchParams.originAirportCode &&
+        searchParams.destinationAirportCode;
+    } else if (searchParams["search_type[id]"] === "from-airport-to-region") {
+      shouldFetch = searchParams["region_to"] &&
+        searchParams.originAirportCode && regionTo?.airports[0];
+    } else {
+      shouldFetch = searchParams["region_to"] && regionTo?.airports[0] &&
+        searchParams["region_from"] && regionFrom?.airports[0];
+    }
+    console.log(searchParams, shouldFetch)
     if (!shouldFetch) return null;
+
     const urlParams = new URLSearchParams(searchParams);
     history.replaceState(null, "", "?" + urlParams.toString());
     let flights = null;
@@ -35,14 +62,18 @@ async function onSubmit(searchParams) {
     if (monthSearch) {
       let monthFlights = await findFlightsInMonth({
         from: searchParams.originAirportCode,
+        regionFrom,
         to: searchParams.destinationAirportCode,
+        regionTo,
         month,
       });
       flights = monthFlights;
     } else {
       flights = await findFlightsForDate({
         from: searchParams.originAirportCode,
+        regionFrom,
         to: searchParams.destinationAirportCode,
+        regionTo,
         date: searchParams.departureDate,
       });
     }
@@ -75,6 +106,8 @@ export default function FormAndResults({ params }) {
   const monthSearchSignal = useSignal(!params.departureDate);
   return (
     <div class="p-4 gap-4 flex flex-col flex-grow-[1]">
+      <ConsultasEnSimultaneo />
+      <Regions />
       <MainForm
         params={params}
         onSubmit={onSubmit}
@@ -112,8 +145,8 @@ export default function FormAndResults({ params }) {
       )}
       {Boolean(requestsSignal.value.error) &&
         requestsSignal.value.status === "finished" && (
-        <p class="m-auto">{requestsSignal.value.error}</p>
-      )}
+          <p class="m-auto">{requestsSignal.value.error}</p>
+        )}
       {(flights === null || flights?.length === 0) && (
         <p class="m-auto">No se encontraron vuelos para este tramo.</p>
       )}
