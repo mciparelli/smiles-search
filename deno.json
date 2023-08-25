@@ -29,7 +29,7 @@
     "twind/": "https://esm.sh/twind@0.16.19/",
     "$std/": "https://deno.land/std@0.193.0/",
     "@headlessui/react": "https://esm.sh/@headlessui/react?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat&external=preact",
-    "icons": "https://esm.sh/@heroicons/react@2.0.18/24/solid?alias=react:preact/compat&exports=CheckIcon,ChevronUpIcon,ChevronUpDownIcon",
+    "icons": "https://esm.sh/@heroicons/react@2.0.18/24/solid?alias=react:preact/compat&exports=CheckIcon,ChevronUpIcon,ChevronDownIcon,ChevronUpDownIcon",
     "react-confetti-explosion": "https://esm.sh/react-confetti-explosion?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat&external=preact",
     "fetch-retry": "https://esm.sh/fetch-retry",
     "bottleneck": "https://esm.sh/bottleneck",

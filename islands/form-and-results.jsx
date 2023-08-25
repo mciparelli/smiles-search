@@ -11,6 +11,7 @@ import { apiPath, findFlightsForDate, findFlightsInMonth } from "api";
 import MainForm from "./main-form.jsx";
 import Filters from "./filters.jsx";
 import Spinner from "components/spinner.jsx";
+import Regions from "components/regions.jsx";
 import { CheckIcon } from "icons";
 
 async function onSubmit(searchParams) {
@@ -71,6 +72,7 @@ export default function FormAndResults({ params }) {
   const monthSearchSignal = useSignal(!params.departureDate);
   return (
     <div class="p-4 gap-4 flex flex-col flex-grow-[1]">
+      <Regions />
       <MainForm
         params={params}
         onSubmit={onSubmit}
@@ -108,8 +110,8 @@ export default function FormAndResults({ params }) {
       )}
       {Boolean(requestsSignal.value.error) &&
         requestsSignal.value.status === "finished" && (
-        <p class="m-auto">{requestsSignal.value.error}</p>
-      )}
+          <p class="m-auto">{requestsSignal.value.error}</p>
+        )}
       {(flights === null || flights?.length === 0) && (
         <p class="m-auto">No se encontraron vuelos para este tramo.</p>
       )}
