@@ -6,7 +6,7 @@ import {
   getLink,
   sortByMilesAndTaxes,
 } from "utils/flight.js";
-import { requestsSignal } from "utils/signals.js";
+import { abortControllersSignal, requestsSignal } from "utils/signals.js";
 import { apiPath, findFlightsForDate, findFlightsInMonth } from "api";
 import MainForm from "./main-form.jsx";
 import Filters from "./filters.jsx";
@@ -23,6 +23,10 @@ async function onSubmit(searchParams) {
     let flights = null;
     const month = searchParams["month[id]"];
     const monthSearch = Boolean(month);
+    for (const controller of abortControllersSignal.value) {
+      controller.abort();
+    }
+    abortControllersSignal.value = [];
     requestsSignal.value = { status: "loading" };
     if (monthSearch) {
       let monthFlights = await findFlightsInMonth({
@@ -51,6 +55,7 @@ async function onSubmit(searchParams) {
       filtered,
     };
   } catch (err) {
+    if (err.name === "AbortError") return null;
     requestsSignal.value = {
       status: "finished",
       data: null,

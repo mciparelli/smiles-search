@@ -1,6 +1,5 @@
 import { searchFlights } from "./smiles-api.js";
 import { formatDate, maxDate, minDate } from "./dates.js";
-import { requestsSignal } from "./signals.js";
 
 function findFlightsForDate({ from, to, date }) {
   return searchFlights({

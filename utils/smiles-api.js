@@ -1,6 +1,7 @@
 import FetchRetry from "fetch-retry";
 import Bottleneck from "bottleneck";
 import { fares, sortByMilesAndTaxes, tripTypes } from "./flight.js";
+import { abortControllersSignal, requestsSignal } from "./signals.js";
 
 const limiter = new Bottleneck({
   maxConcurrent: 20,
@@ -21,6 +22,7 @@ const fetch = limiter.wrap(FetchRetry(globalThis.fetch, {
     }
     // retry on any network error, or 5xx status codes
     if (error !== null || status >= 500) {
+      if (error?.name === "AbortError") return false;
       console.log(`retrying, attempt number ${attempt + 1}`);
       console.log({ error, status });
       return true;
@@ -62,7 +64,7 @@ async function _getTax({ flightUid, fare }) {
 
   const response = await fetch(
     "https://api-airlines-boarding-tax-prd.smiles.com.br/v1/airlines/flight/boardingtax?" +
-    params.toString(),
+      params.toString(),
     {
       headers,
     },
@@ -72,11 +74,14 @@ async function _getTax({ flightUid, fare }) {
 }
 
 async function searchFlights(paramsObject) {
+  const controller = new AbortController();
+  abortControllersSignal.value = [...abortControllersSignal.value, controller];
   const params = new URLSearchParams({ ...defaultParams, ...paramsObject });
   const response = await fetch(
     "https://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search?" +
-    params.toString(),
+      params.toString(),
     {
+      signal: controller.signal,
       headers,
     },
   );
