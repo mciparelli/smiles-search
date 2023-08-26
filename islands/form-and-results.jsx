@@ -55,6 +55,7 @@ async function onSubmit(searchParams) {
       filtered,
     };
   } catch (err) {
+    // if aborted, leave it loading as most likely the user fired another set of requests
     if (err.name === "AbortError") return null;
     requestsSignal.value = {
       status: "finished",
