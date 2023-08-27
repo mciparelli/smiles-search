@@ -1,3 +1,5 @@
+import { resultadosSignal } from "./signals.js";
+
 const fares = {
   moneyClub: "SMILES_MONEY_CLUB",
   club: "SMILES_CLUB",
@@ -135,7 +137,6 @@ const filtros = {
     originAirportCode: "EZE",
     cabina: cabinas[0],
     airlineCodes: [],
-    results: 10,
     escalas: escalas[0],
     viajeFacil: viajeFacil[0],
     tarifas: tarifas[0],
@@ -198,7 +199,7 @@ function filterFlights({ allFlights, monthSearch, filters }) {
     filtered = allFlights.filter(filterFunction);
   }
   filtered = sortByMilesAndTaxes(filtered);
-  return filtered.slice(0, Number(filters.results));
+  return filtered.slice(0, resultadosSignal.value);
 }
 
 export {

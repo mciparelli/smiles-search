@@ -1,6 +1,7 @@
 import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronUpIcon } from "icons";
 import { filtros } from "utils/flight.js";
+import { resultadosSignal } from "utils/signals.js";
 import Dropdown from "components/dropdown.jsx";
 import { apiPath } from "api";
 
@@ -18,7 +19,10 @@ export default function Filtros({ onChange }) {
           type="number"
           name="results"
           max={30}
-          defaultValue={filtros.defaults.results}
+          value={resultadosSignal.value}
+          onChange={(ev) => {
+            resultadosSignal.value = Number(ev.target.value);
+          }}
           class="h-10 ml-2 mb-2 rounded-sm px-2 w-16"
         />
       </label>

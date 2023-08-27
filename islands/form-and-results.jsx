@@ -6,7 +6,11 @@ import {
   getLink,
   sortByMilesAndTaxes,
 } from "utils/flight.js";
-import { abortControllersSignal, requestsSignal } from "utils/signals.js";
+import {
+  abortControllersSignal,
+  requestsSignal,
+  resultadosSignal,
+} from "utils/signals.js";
 import { apiPath, findFlightsForDate, findFlightsInMonth } from "api";
 import MainForm from "./main-form.jsx";
 import Filters from "./filters.jsx";
@@ -47,7 +51,7 @@ async function onSubmit(searchParams) {
       : flights;
     if (filtered) {
       filtered = sortByMilesAndTaxes(filtered);
-      filtered = filtered.slice(0, filtros.defaults.results);
+      filtered = filtered.slice(0, resultadosSignal.value);
     }
     requestsSignal.value = {
       status: "finished",
