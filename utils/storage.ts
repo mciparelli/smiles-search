@@ -1,5 +1,6 @@
 // https://twitter.com/_developit/status/1692546035321545043?s=20
 import { effect, signal } from "@preact/signals";
+import { IS_BROWSER } from "$fresh/runtime.ts";
 
 interface CustomStorage {
   getItem(key: string): void;
@@ -18,8 +19,7 @@ interface CustomStorage {
  */
 function persistedSignal<T>(
   initialValue: T,
-  key: string,
-  storage: Storage | CustomStorage = localStorage,
+  key: string
 ) {
   const sig = signal(initialValue);
   let skipSave = true;
@@ -28,7 +28,7 @@ function persistedSignal<T>(
   function load() {
     skipSave = true;
     try {
-      const stored = JSON.parse(storage.getItem(key));
+      const stored = JSON.parse(localStorage.getItem(key));
       if (stored != null) sig.value = stored;
     } catch (_err) {
       // ignore blocked storage access
@@ -40,7 +40,7 @@ function persistedSignal<T>(
     const value = sig.value;
     if (skipSave) return;
     try {
-      storage.setItem(key, JSON.stringify(value));
+      localStorage.setItem(key, JSON.stringify(value));
     } catch (_err) {
       // ignore blocked storage access
     }
@@ -52,8 +52,9 @@ function persistedSignal<T>(
       if (ev.key === key) load();
     });
   }
-
-  load();
+  if (IS_BROWSER) { 
+    load();
+  }
   return sig;
 }
 
