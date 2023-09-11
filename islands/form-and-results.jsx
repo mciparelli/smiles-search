@@ -16,7 +16,6 @@ import MainForm from "./main-form.jsx";
 import Filters from "./filters.jsx";
 import Spinner from "components/spinner.jsx";
 import { CheckIcon } from "icons";
-import ConsultasEnSimultaneo from "components/simultaneous-searches-input.jsx";
 import Regions from "components/regions.jsx";
 import { regionsSignal } from "utils/signals.js";
 
@@ -106,7 +105,6 @@ export default function FormAndResults({ params }) {
   const monthSearchSignal = useSignal(!params.departureDate);
   return (
     <div class="p-4 gap-4 flex flex-col flex-grow-[1]">
-      <ConsultasEnSimultaneo />
       <Regions />
       <MainForm
         params={params}

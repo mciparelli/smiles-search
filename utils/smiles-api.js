@@ -9,14 +9,14 @@ import {
 } from "./signals.js";
 
 const limiter = new Bottleneck({
-  maxConcurrent: concurrencySignal.value,
+  maxConcurrent: 20,
 });
 
-effect(() => {
-  limiter.updateSettings({
-    maxConcurrent: concurrencySignal.value,
-  });
-});
+// effect(() => {
+//   limiter.updateSettings({
+//     maxConcurrent: concurrencySignal.value,
+//   });
+// });
 
 const fetch = limiter.wrap(FetchRetry(globalThis.fetch, {
   retryDelay: function (attempt, _error, _response) {
@@ -75,7 +75,7 @@ async function _getTax({ flightUid, fare }) {
 
   const response = await fetch(
     "https://api-airlines-boarding-tax-prd.smiles.com.br/v1/airlines/flight/boardingtax?" +
-      params.toString(),
+    params.toString(),
     {
       headers,
     },
@@ -90,7 +90,7 @@ async function searchFlights(paramsObject) {
   const params = new URLSearchParams({ ...defaultParams, ...paramsObject });
   const response = await fetch(
     "https://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search?" +
-      params.toString(),
+    params.toString(),
     {
       signal: controller.signal,
       headers,
