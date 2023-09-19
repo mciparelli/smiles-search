@@ -1,10 +1,10 @@
 import FetchRetry from "fetch-retry";
 import Bottleneck from "bottleneck";
-import { effect } from "@preact/signals";
-import { fares, tripTypes } from "./flight.js";
+// import { effect } from "@preact/signals";
+import { tripTypes } from "./flight.js";
 import {
   abortControllersSignal,
-  concurrencySignal,
+  // concurrencySignal,
   requestsSignal,
 } from "./signals.js";
 
@@ -75,7 +75,7 @@ async function getTax({ flightUid, fare }) {
 
   const response = await fetch(
     "https://api-airlines-boarding-tax-prd.smiles.com.br/v1/airlines/flight/boardingtax?" +
-    params.toString(),
+      params.toString(),
     {
       headers,
     },
@@ -90,7 +90,7 @@ async function searchFlights(paramsObject) {
   const params = new URLSearchParams({ ...defaultParams, ...paramsObject });
   const response = await fetch(
     "https://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search?" +
-    params.toString(),
+      params.toString(),
     {
       signal: controller.signal,
       headers,
@@ -104,12 +104,8 @@ async function searchFlights(paramsObject) {
     message:
       `${paramsObject.originAirportCode}-${paramsObject.destinationAirportCode} ${paramsObject.departureDate}`,
   };
-  const FARE_TYPE = fares.club;
-  const transformedFlights = await Promise.all(
-    flightList.map(async (someFlight) => {
-      const fare = someFlight.fareList.find((someFare) =>
-        someFare.type === FARE_TYPE
-      );
+  return flightList.map((someFlight) => {
+    return someFlight.fareList.map((fare) => {
       return {
         uid: someFlight.uid,
         origin: someFlight.departure.airport.code,
@@ -130,9 +126,8 @@ async function searchFlights(paramsObject) {
         availableSeats: someFlight.availableSeats,
         cabin: someFlight.cabin,
       };
-    }),
-  );
-  return transformedFlights;
+    });
+  }).flat();
 }
 
 export { getTax, searchFlights };

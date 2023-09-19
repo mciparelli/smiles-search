@@ -46,7 +46,6 @@ async function onSubmit(searchParams) {
       shouldFetch = searchParams["region_to"] && regionTo?.airports[0] &&
         searchParams["region_from"] && regionFrom?.airports[0];
     }
-    console.log(searchParams, shouldFetch)
     if (!shouldFetch) return null;
 
     const urlParams = new URLSearchParams(searchParams);
@@ -77,16 +76,18 @@ async function onSubmit(searchParams) {
         date: searchParams.departureDate,
       });
     }
-    let filtered = monthSearch
-      ? flights.map((dayFlights) => dayFlights?.[0]).filter(Boolean)
-      : flights;
-    if (filtered) {
-      filtered = sortByMilesAndTaxes(filtered);
-      filtered = filtered.slice(0, resultadosSignal.value);
-    }
+    const initialFilters = {
+      "canje[id]": filtros.defaults.canje.id,
+    };
+    const filtered = filterFlights({
+      allFlights: flights,
+      monthSearch,
+      filters: initialFilters,
+    });
     requestsSignal.value = {
       status: "finished",
       data: flights,
+      currentFilters: initialFilters,
       filtered,
     };
   } catch (err) {
@@ -104,6 +105,9 @@ export default function FormAndResults({ params }) {
   const flights = requestsSignal.value.filtered;
   const isLoading = requestsSignal.value.status === "loading";
   const monthSearchSignal = useSignal(!params.departureDate);
+  const canjeId = requestsSignal.value.currentFilters?.["canje[id]"] ??
+    filtros.defaults.canje.id;
+  const canje = filtros.canje.find((someCanje) => someCanje.id === canjeId);
   return (
     <div class="p-4 gap-4 flex flex-col flex-grow-[1]">
       <Regions />
@@ -117,6 +121,7 @@ export default function FormAndResults({ params }) {
           onChange={(newFilters) => {
             requestsSignal.value = {
               ...requestsSignal.value,
+              currentFilters: newFilters,
               filtered: filterFlights({
                 allFlights: requestsSignal.value.data,
                 monthSearch: monthSearchSignal.value,
@@ -144,8 +149,8 @@ export default function FormAndResults({ params }) {
       )}
       {Boolean(requestsSignal.value.error) &&
         requestsSignal.value.status === "finished" && (
-          <p class="m-auto">{requestsSignal.value.error}</p>
-        )}
+        <p class="m-auto">{requestsSignal.value.error}</p>
+      )}
       {(flights === null || flights?.length === 0) && (
         <p class="m-auto">No se encontraron vuelos para este tramo.</p>
       )}
@@ -157,13 +162,15 @@ export default function FormAndResults({ params }) {
                 <tr>
                   <th class="py-4 bg-blue-400 px-2">Tramo</th>
                   <th class="bg-blue-400 px-2">Fecha y hora</th>
-                  <th class="bg-blue-400 px-2 lg:hidden">Millas</th>
+                  <th class="bg-blue-400 px-2 lg:hidden">{canje.name}</th>
                   <th class="bg-blue-400 px-2">Aerolínea</th>
                   <th class="bg-blue-400 px-2">Cabina</th>
                   <th class="bg-blue-400 px-2">Escalas</th>
                   <th class="bg-blue-400 px-2">Duración</th>
                   <th class="bg-blue-400 px-2">Asientos</th>
-                  <th class="bg-blue-400 px-2 hidden lg:table-cell">Millas</th>
+                  <th class="bg-blue-400 px-2 hidden lg:table-cell">
+                    {canje.name}
+                  </th>
                   <th class="bg-blue-400 px-2">Tasas</th>
                 </tr>
               </thead>
@@ -171,7 +178,12 @@ export default function FormAndResults({ params }) {
                 {flights.map((flight, i) => {
                   const bgColor = i % 2 === 0 ? "bg-white" : "bg-blue-200";
                   return (
-                    <Flight key={flight.uid} bgColor={bgColor} flight={flight} />
+                    <Flight
+                      key={flight.uid}
+                      bgColor={bgColor}
+                      flight={flight}
+                      canje={canje}
+                    />
                   );
                 })}
               </tbody>

@@ -119,18 +119,18 @@ export default function Filtros({ onChange }) {
             ))}
           </Dropdown.Options>
         </Dropdown>
-        {
-          /*<Dropdown name="smiles-and-money" defaultValue={smilesAndMoney.find(option => option.id === preferences['smiles-and-money'])}>
-          <Dropdown.Button>{({ value }) => `Smiles and Money: ${value.id === '' ? 'Deshabilitado' : 'Habilitado'}`}</Dropdown.Button>
+        <Dropdown name="canje" defaultValue={filtros.defaults.canje}>
+          <Dropdown.Button>
+            {({ value }) => `Canje: ${value.name}`}
+          </Dropdown.Button>
           <Dropdown.Options>
-            {smilesAndMoney.map(option =>
-              <Dropdown.Option key={option.id}
-                value={option}
-              >{option.name}</Dropdown.Option>
-            )}
+            {filtros.canje.map((option) => (
+              <Dropdown.Option key={option.id} value={option}>
+                {option.name}
+              </Dropdown.Option>
+            ))}
           </Dropdown.Options>
-        </Dropdown>*/
-        }
+        </Dropdown>
         <div class="flex gap-4">
           <label class="py-2">Max. horas</label>
           <input

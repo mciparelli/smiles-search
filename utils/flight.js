@@ -28,7 +28,11 @@ function sortByMilesAndTaxes(flightList) {
   return flightList.sort(
     (a, b) => {
       if (a.fare.miles === b.fare.miles) {
-        return a.fare.airlineTax - b.fare.airlineTax;
+        if (a.fare.money === b.fare.money) {
+          return a.fare.airlineTax - b.fare.airlineTax;
+        } else {
+          return a.fare.money - b.fare.money;
+        }
       }
       return a.fare.miles - b.fare.miles;
     },
@@ -120,10 +124,11 @@ const tarifas = [{ id: "", name: "Todas" }, {
   id: "AWARD",
   name: "Sólo Award",
 }];
-const smilesAndMoney = [{ id: "", name: "Sólo millas" }, {
-  id: "1",
+const canje = [{ id: fares.club, name: "Millas" }, {
+  id: fares.moneyClub,
   name: "Smiles and Money",
 }];
+
 const searchTypes = [
   { id: "airports", name: "Aeropuertos y ciudades" },
   { id: "from-airport-to-region", name: "De aeropuerto a región" },
@@ -137,7 +142,7 @@ const filtros = {
   escalas,
   viajeFacil,
   vuelosABrasil,
-  smilesAndMoney,
+  canje,
   searchTypes,
   tarifas,
   defaults: {
@@ -148,6 +153,7 @@ const filtros = {
     viajeFacil: viajeFacil[0],
     tarifas: tarifas[0],
     searchTypes: searchTypes[0],
+    canje: canje[0],
   },
 };
 
@@ -161,6 +167,7 @@ function filterFlights({ allFlights, monthSearch, filters }) {
       stopsFilter = true,
       viajeFacilFilter = true,
       tarifaFilter = true,
+      canjeFilter = true,
       hoursFilter = true;
     if (
       filters["cabinType[id]"] &&
@@ -186,6 +193,9 @@ function filterFlights({ allFlights, monthSearch, filters }) {
     ) {
       tarifaFilter = someFlight.fareType === filters["tarifa[id]"];
     }
+    if (filters["canje[id]"]) {
+      canjeFilter = someFlight.fare.type === filters["canje[id]"];
+    }
     if (filters["maxhours"]) {
       hoursFilter = someFlight.durationInHours <= Number(filters["maxhours"]);
     }
@@ -195,6 +205,7 @@ function filterFlights({ allFlights, monthSearch, filters }) {
       stopsFilter,
       viajeFacilFilter,
       tarifaFilter,
+      canjeFilter,
       hoursFilter,
     ].every((filter) => filter);
   };
