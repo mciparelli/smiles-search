@@ -9,13 +9,15 @@ export default function Flight({ flight, canje, bgColor }) {
     { flightUid: flight.uid, fare: flight.fare },
     getTax,
   );
-  const milesDisplay = <>
-    {new Intl.NumberFormat("es-AR").format(
-      flight.fare.miles,
-    )}
-    {canje.id === fares.moneyClub && flight.fare.money &&
-      ` + $${Math.floor(flight.fare.money / 1000)}K`}
-  </>;
+  const milesDisplay = (
+    <>
+      {new Intl.NumberFormat("es-AR").format(
+        flight.fare.miles,
+      )}
+      {canje.id === fares.moneyClub && flight.fare.money &&
+        ` + $${Math.floor(flight.fare.money / 1000)}K`}
+    </>
+  );
   return (
     <tr class="text-slate-500 whitespace-nowrap">
       <td class={`${bgColor} py-4 px-2`}>
