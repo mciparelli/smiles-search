@@ -5,7 +5,7 @@ import { formatFlightDateLong, formatFlightDateShort } from "utils/dates.js";
 import Spinner from "components/spinner.jsx";
 
 export default function Flight({ flight, canje, bgColor }) {
-  const { data: taxInfo, isLoading } = useSWR(
+  const { data: taxInfo, error: taxError, isLoading } = useSWR(
     { flightUid: flight.uid, fare: flight.fare },
     getTax,
   );
@@ -56,6 +56,7 @@ export default function Flight({ flight, canje, bgColor }) {
       <td class={`${bgColor} px-2`}>
         {isLoading && <Spinner />}
         {taxInfo && `$${Math.floor(taxInfo.money / 1000)}K`}
+        {taxError && '?'}
       </td>
     </tr>
   );
