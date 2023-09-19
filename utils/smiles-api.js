@@ -122,6 +122,7 @@ async function searchFlights(paramsObject) {
           money: fare.money,
           type: fare.type,
         },
+        fareType: someFlight.sourceFare,
         departureDate: new Date(someFlight.departure.date),
         stops: someFlight.stops,
         durationInHours: someFlight.duration.hours,

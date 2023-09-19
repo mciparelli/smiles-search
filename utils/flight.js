@@ -184,7 +184,7 @@ function filterFlights({ allFlights, monthSearch, filters }) {
       filters["tarifa[id]"] &&
       filters["tarifa[id]"] !== filtros.defaults.tarifas.id
     ) {
-      tarifaFilter = someFlight.fare.type === filters["tarifa[id]"];
+      tarifaFilter = someFlight.fareType === filters["tarifa[id]"];
     }
     if (filters["maxhours"]) {
       hoursFilter = someFlight.durationInHours <= Number(filters["maxhours"]);
