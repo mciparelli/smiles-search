@@ -56,7 +56,7 @@ export default function Flight({ flight, canje, bgColor }) {
       <td class={`${bgColor} px-2`}>
         {isLoading && <Spinner />}
         {taxInfo && `$${Math.floor(taxInfo.money / 1000)}K`}
-        {taxError && "?"}
+        {!isLoading && taxError && "?"}
       </td>
     </tr>
   );
