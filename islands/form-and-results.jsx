@@ -15,6 +15,7 @@ import { apiPath, findFlightsForDate, findFlightsInMonth } from "api";
 import MainForm from "./main-form.jsx";
 import Filters from "./filters.jsx";
 import Spinner from "components/spinner.jsx";
+import Flight from "components/flight.jsx";
 import { CheckIcon } from "icons";
 import Regions from "components/regions.jsx";
 import { regionsSignal } from "utils/signals.js";
@@ -170,54 +171,7 @@ export default function FormAndResults({ params }) {
                 {flights.map((flight, i) => {
                   const bgColor = i % 2 === 0 ? "bg-white" : "bg-blue-200";
                   return (
-                    <tr
-                      class="text-slate-500 whitespace-nowrap"
-                      key={flight.uid}
-                    >
-                      <td class={`${bgColor} py-4 px-2`}>
-                        <a
-                          class="text-blue-500"
-                          target="_blank"
-                          href={getLink(flight)}
-                        >
-                          {flight.origin}-{flight.destination}
-                        </a>
-                      </td>
-                      <td class={`${bgColor} py-px-2 md:hidden`}>
-                        {formatFlightDateShort(flight.departureDate)}
-                      </td>
-                      <td class={`${bgColor} py-px-2 hidden md:table-cell`}>
-                        {formatFlightDateLong(flight.departureDate)}
-                      </td>
-                      <td class={`${bgColor} px-2 lg:hidden`}>
-                        {new Intl.NumberFormat("es-AR").format(
-                          flight.fare.miles,
-                        )}
-                      </td>
-                      <td class={`${bgColor} px-2`}>{flight.airline.name}</td>
-                      <td class={`${bgColor} px-2`}>
-                        {filtros.cabinas.find((someCabina) =>
-                          someCabina.id === flight.cabin
-                        ).name}
-                      </td>
-                      <td class={`${bgColor} px-2`}>
-                        {flight.stops || "Directo"}
-                      </td>
-                      <td class={`${bgColor} px-2`}>
-                        {flight.durationInHours}hs
-                      </td>
-                      <td class={`${bgColor} px-2`}>{flight.availableSeats}</td>
-                      <td class={`${bgColor} px-2 hidden lg:table-cell`}>
-                        {new Intl.NumberFormat("es-AR").format(
-                          flight.fare.miles,
-                        )}
-                      </td>
-                      <td class={`${bgColor} px-2`}>
-                        {flight.fare.airlineTax
-                          ? `$${flight.fare.airlineTax}K`
-                          : "?"}
-                      </td>
-                    </tr>
+                    <Flight key={flight.uid} bgColor={bgColor} flight={flight} />
                   );
                 })}
               </tbody>

@@ -62,7 +62,7 @@ const headers = {
   region: "ARGENTINA",
 };
 
-async function _getTax({ flightUid, fare }) {
+async function getTax({ flightUid, fare }) {
   const params = new URLSearchParams({
     adults: "1",
     children: "0",
@@ -116,11 +116,11 @@ async function searchFlights(paramsObject) {
         destination: someFlight.arrival.airport.code,
         viajeFacil: someFlight.codeContext === "FFY",
         fare: {
-          airlineTax: Math.floor(fare.airlineTax / 1000),
+          airlineTax: fare.airlineTax,
+          uid: fare.uid,
           miles: fare.miles,
           money: fare.money,
-          // tax: await getTax({ flightUid: someFlight.uid, fare }),
-          type: someFlight.sourceFare,
+          type: fare.type,
         },
         departureDate: new Date(someFlight.departure.date),
         stops: someFlight.stops,
@@ -134,4 +134,4 @@ async function searchFlights(paramsObject) {
   return transformedFlights;
 }
 
-export { searchFlights };
+export { getTax, searchFlights };

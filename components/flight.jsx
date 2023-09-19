@@ -1,0 +1,61 @@
+import useSWR from "swr";
+import {
+  filtros,
+  getLink
+} from "utils/flight.js";
+import { getTax } from 'utils/smiles-api.js';
+import { formatFlightDateLong, formatFlightDateShort } from "utils/dates.js";
+import Spinner from "components/spinner.jsx";
+
+export default function Flight({ flight, bgColor }) {
+  const { data: taxInfo, isLoading } = useSWR(
+    { flightUid: flight.uid, fare: flight.fare },
+    getTax
+  );
+  return (<tr
+    class="text-slate-500 whitespace-nowrap"
+  >
+    <td class={`${bgColor} py-4 px-2`}>
+      <a
+        class="text-blue-500"
+        target="_blank"
+        href={getLink(flight)}
+      >
+        {flight.origin}-{flight.destination}
+      </a>
+    </td>
+    <td class={`${bgColor} py-px-2 md:hidden`}>
+      {formatFlightDateShort(flight.departureDate)}
+    </td>
+    <td class={`${bgColor} py-px-2 hidden md:table-cell`}>
+      {formatFlightDateLong(flight.departureDate)}
+    </td>
+    <td class={`${bgColor} px-2 lg:hidden`}>
+      {new Intl.NumberFormat("es-AR").format(
+        flight.fare.miles,
+      )}
+    </td>
+    <td class={`${bgColor} px-2`}>{flight.airline.name}</td>
+    <td class={`${bgColor} px-2`}>
+      {filtros.cabinas.find((someCabina) =>
+        someCabina.id === flight.cabin
+      ).name}
+    </td>
+    <td class={`${bgColor} px-2`}>
+      {flight.stops || "Directo"}
+    </td>
+    <td class={`${bgColor} px-2`}>
+      {flight.durationInHours}hs
+    </td>
+    <td class={`${bgColor} px-2`}>{flight.availableSeats}</td>
+    <td class={`${bgColor} px-2 hidden lg:table-cell`}>
+      {new Intl.NumberFormat("es-AR").format(
+        flight.fare.miles,
+      )}
+    </td>
+    <td class={`${bgColor} px-2`}>
+      {isLoading && <Spinner />}
+      {taxInfo && `$${Math.floor(taxInfo.money / 1000)}K`}
+    </td>
+  </tr>);
+}
