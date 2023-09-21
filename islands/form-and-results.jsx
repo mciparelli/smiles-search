@@ -104,7 +104,7 @@ async function onSubmit(searchParams) {
 export default function FormAndResults({ params }) {
   const flights = requestsSignal.value.filtered;
   const isLoading = requestsSignal.value.status === "loading";
-  const monthSearchSignal = useSignal(!params.departureDate);
+  const isMonthSearch = !params.departureDate;
   const canjeId = requestsSignal.value.currentFilters?.["canje[id]"] ??
     filtros.defaults.canje.id;
   const canje = filtros.canje.find((someCanje) => someCanje.id === canjeId);
@@ -114,7 +114,7 @@ export default function FormAndResults({ params }) {
       <MainForm
         params={params}
         onSubmit={onSubmit}
-        monthSearchSignal={monthSearchSignal}
+        initialMonthSearch={isMonthSearch}
       />
       {requestsSignal.value.data?.length > 0 && !isLoading && (
         <Filters
@@ -124,7 +124,7 @@ export default function FormAndResults({ params }) {
               currentFilters: newFilters,
               filtered: filterFlights({
                 allFlights: requestsSignal.value.data,
-                monthSearch: monthSearchSignal.value,
+                monthSearch: isMonthSearch,
                 filters: newFilters,
               }),
             };
@@ -149,8 +149,8 @@ export default function FormAndResults({ params }) {
       )}
       {Boolean(requestsSignal.value.error) &&
         requestsSignal.value.status === "finished" && (
-        <p class="m-auto">{requestsSignal.value.error}</p>
-      )}
+          <p class="m-auto">{requestsSignal.value.error}</p>
+        )}
       {(flights === null || flights?.length === 0) && (
         <p class="m-auto">No se encontraron vuelos para este tramo.</p>
       )}
@@ -162,16 +162,15 @@ export default function FormAndResults({ params }) {
                 <tr>
                   <th class="py-4 bg-blue-400 px-2">Tramo</th>
                   <th class="bg-blue-400 px-2">Fecha y hora</th>
-                  <th class="bg-blue-400 px-2 lg:hidden">{canje.name}</th>
+                  <th class="bg-blue-400 px-2 lg:hidden">{canje.name} + Tasas</th>
                   <th class="bg-blue-400 px-2">Aerolínea</th>
                   <th class="bg-blue-400 px-2">Cabina</th>
                   <th class="bg-blue-400 px-2">Escalas</th>
                   <th class="bg-blue-400 px-2">Duración</th>
                   <th class="bg-blue-400 px-2">Asientos</th>
                   <th class="bg-blue-400 px-2 hidden lg:table-cell">
-                    {canje.name}
+                    {canje.name} + Tasas
                   </th>
-                  <th class="bg-blue-400 px-2">Tasas</th>
                 </tr>
               </thead>
               <tbody>

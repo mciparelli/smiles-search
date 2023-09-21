@@ -16,7 +16,28 @@ import OriginDestinationInputs from "components/origin-destination-inputs.jsx";
 import { useSignal } from "@preact/signals";
 import { filtros } from "utils/flight.js";
 
-export default function MainForm({ params, monthSearchSignal, onSubmit }) {
+function DatesSelect({ initialMonthSearch, params }) {
+  const monthSearchSignal = useSignal(initialMonthSearch);
+  return (
+    <fieldset class="flex flex-col gap-2 my-2">
+      <MonthSearchSwitch signal={monthSearchSignal} />
+      {monthSearchSignal.value
+        ? <MonthsDropdown class="w-64" defaultValue={params["month[id]"]} />
+        : (
+          <input
+            name="departureDate"
+            required
+            type="date"
+            class="w-64 shadow-md px-2 inline-flex items-center rounded-sm group-valid:border-green-400 group-invalid:border-red-400 h-10"
+            value={params.departureDate ?? formatDate(today)}
+            min={formatDate(minDate)}
+            max={formatDate(maxDate)}
+          />
+        )}
+    </fieldset>)
+}
+
+export default function MainForm({ params, initialMonthSearch, onSubmit }) {
   const searchTypeSignal = useSignal(
     params["search_type[id]"] ?? filtros.defaults.searchTypes.id,
   );
@@ -43,22 +64,7 @@ export default function MainForm({ params, monthSearchSignal, onSubmit }) {
         defaults={params}
         searchType={searchTypeSignal.value}
       />
-      <fieldset class="flex flex-col gap-2 my-2">
-        <MonthSearchSwitch signal={monthSearchSignal} />
-        {monthSearchSignal.value
-          ? <MonthsDropdown class="w-64" defaultValue={params["month[id]"]} />
-          : (
-            <input
-              name="departureDate"
-              required
-              type="date"
-              class="w-64 shadow-md px-2 inline-flex items-center rounded-sm group-valid:border-green-400 group-invalid:border-red-400 h-10"
-              value={params.departureDate ?? formatDate(today)}
-              min={formatDate(minDate)}
-              max={formatDate(maxDate)}
-            />
-          )}
-      </fieldset>
+      <DatesSelect initialMonthSearch={initialMonthSearch} params={params} />
       <button
         type="submit"
         class="h-10 shadow-md disabled:opacity-25 bg-blue-700 text-white rounded-sm px-4"

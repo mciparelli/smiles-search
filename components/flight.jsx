@@ -4,8 +4,17 @@ import { getTax } from "utils/smiles-api.js";
 import { formatFlightDateLong, formatFlightDateShort } from "utils/dates.js";
 import Spinner from "components/spinner.jsx";
 
+function Tax({ data, error, isLoading }) {
+  return (
+    <>
+      {isLoading && <Spinner />}
+      {data && `$${Math.floor(data.money / 1000)}K`}
+      {!isLoading && !data && error && "?"}
+    </>)
+}
+
 export default function Flight({ flight, canje, bgColor }) {
-  const { data: taxInfo, error: taxError, isLoading } = useSWR(
+  const taxInfo = useSWR(
     { flightUid: flight.uid, fare: flight.fare },
     getTax,
   );
@@ -36,7 +45,10 @@ export default function Flight({ flight, canje, bgColor }) {
         {formatFlightDateLong(flight.departureDate)}
       </td>
       <td class={`${bgColor} px-2 lg:hidden`}>
-        {milesDisplay}
+        <div class="inline-flex">
+          {milesDisplay} +{' '}
+          <Tax {...taxInfo} />
+        </div>
       </td>
       <td class={`${bgColor} px-2`}>{flight.airline.name}</td>
       <td class={`${bgColor} px-2`}>
@@ -51,12 +63,10 @@ export default function Flight({ flight, canje, bgColor }) {
       </td>
       <td class={`${bgColor} px-2`}>{flight.availableSeats}</td>
       <td class={`${bgColor} px-2 hidden lg:table-cell`}>
-        {milesDisplay}
-      </td>
-      <td class={`${bgColor} px-2`}>
-        {isLoading && <Spinner />}
-        {taxInfo && `$${Math.floor(taxInfo.money / 1000)}K`}
-        {!isLoading && !taxInfo && taxError && "?"}
+        <div class="inline-flex">
+          {milesDisplay} +{' '}
+          <Tax {...taxInfo} />
+        </div>
       </td>
     </tr>
   );
