@@ -34,7 +34,8 @@ function DatesSelect({ initialMonthSearch, params }) {
             max={formatDate(maxDate)}
           />
         )}
-    </fieldset>)
+    </fieldset>
+  );
 }
 
 export default function MainForm({ params, initialMonthSearch, onSubmit }) {

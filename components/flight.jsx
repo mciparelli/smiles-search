@@ -10,7 +10,8 @@ function Tax({ data, error, isLoading }) {
       {isLoading && <Spinner />}
       {data && `$${Math.floor(data.money / 1000)}K`}
       {!isLoading && !data && error && "?"}
-    </>)
+    </>
+  );
 }
 
 export default function Flight({ flight, canje, bgColor }) {
@@ -46,8 +47,7 @@ export default function Flight({ flight, canje, bgColor }) {
       </td>
       <td class={`${bgColor} px-2 lg:hidden`}>
         <div class="inline-flex">
-          {milesDisplay} +{' '}
-          <Tax {...taxInfo} />
+          {milesDisplay} + <Tax {...taxInfo} />
         </div>
       </td>
       <td class={`${bgColor} px-2`}>{flight.airline.name}</td>
@@ -64,8 +64,7 @@ export default function Flight({ flight, canje, bgColor }) {
       <td class={`${bgColor} px-2`}>{flight.availableSeats}</td>
       <td class={`${bgColor} px-2 hidden lg:table-cell`}>
         <div class="inline-flex">
-          {milesDisplay} +{' '}
-          <Tax {...taxInfo} />
+          {milesDisplay} + <Tax {...taxInfo} />
         </div>
       </td>
     </tr>

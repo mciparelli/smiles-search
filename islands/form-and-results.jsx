@@ -149,8 +149,8 @@ export default function FormAndResults({ params }) {
       )}
       {Boolean(requestsSignal.value.error) &&
         requestsSignal.value.status === "finished" && (
-          <p class="m-auto">{requestsSignal.value.error}</p>
-        )}
+        <p class="m-auto">{requestsSignal.value.error}</p>
+      )}
       {(flights === null || flights?.length === 0) && (
         <p class="m-auto">No se encontraron vuelos para este tramo.</p>
       )}
@@ -162,7 +162,9 @@ export default function FormAndResults({ params }) {
                 <tr>
                   <th class="py-4 bg-blue-400 px-2">Tramo</th>
                   <th class="bg-blue-400 px-2">Fecha y hora</th>
-                  <th class="bg-blue-400 px-2 lg:hidden">{canje.name} + Tasas</th>
+                  <th class="bg-blue-400 px-2 lg:hidden">
+                    {canje.name} + Tasas
+                  </th>
                   <th class="bg-blue-400 px-2">Aerolínea</th>
                   <th class="bg-blue-400 px-2">Cabina</th>
                   <th class="bg-blue-400 px-2">Escalas</th>
