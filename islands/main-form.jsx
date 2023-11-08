@@ -8,7 +8,6 @@ import {
   months,
   today,
 } from "utils/dates.js";
-import { findFlightsForDate, findFlightsInMonth } from "api";
 import MonthSearchSwitch from "components/month-search-switch.jsx";
 import MonthsDropdown from "components/months-dropdown.jsx";
 import SearchTypeDropdown from "components/search-type-dropdown.jsx";
@@ -49,12 +48,7 @@ export default function MainForm({ params, initialMonthSearch, onSubmit }) {
     <form
       class="flex flex-col gap-4 items-start"
       method="get"
-      onSubmit={(event) => {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        const searchParams = Object.fromEntries(formData.entries());
-        onSubmit(searchParams);
-      }}
+
     >
       <SearchTypeDropdown
         class="w-64"

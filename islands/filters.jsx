@@ -3,7 +3,6 @@ import { filtros } from "utils/flight.js";
 import { resultadosSignal } from "utils/signals.js";
 import Dropdown from "components/dropdown.jsx";
 import Collapsible from "components/collapsible.jsx";
-import { apiPath } from "api";
 
 export default function Filtros({ onChange }) {
   return (

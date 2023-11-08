@@ -15,6 +15,7 @@ function Tax({ data, error, isLoading }) {
 }
 
 export default function Flight({ flight, canje, bgColor }) {
+  console.log(flight, 'flight!!!')
   const taxInfo = useSWR(
     { flightUid: flight.uid, fare: flight.fare },
     getTax,

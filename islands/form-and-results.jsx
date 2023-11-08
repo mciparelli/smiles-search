@@ -11,7 +11,6 @@ import {
   requestsSignal,
   resultadosSignal,
 } from "utils/signals.js";
-import { apiPath, findFlightsForDate, findFlightsInMonth } from "api";
 import MainForm from "./main-form.jsx";
 import Filters from "./filters.jsx";
 import Spinner from "components/spinner.jsx";
@@ -20,110 +19,31 @@ import { CheckIcon } from "icons";
 import Regions from "components/regions.jsx";
 import { regionsSignal } from "utils/signals.js";
 
-async function onSubmit(searchParams) {
-  try {
-    let shouldFetch = true,
-      regionFrom = searchParams["region_from"]
-        ? regionsSignal.value.find((someRegion) =>
-          someRegion.name === searchParams["region_from"]
-        )
-        : null,
-      regionTo = searchParams["region_to"]
-        ? regionsSignal.value.find((someRegion) =>
-          someRegion.name === searchParams["region_to"]
-        )
-        : null;
-    if (searchParams["search_type[id]"] === "from-region-to-airport") {
-      shouldFetch = searchParams["region_from"] &&
-        searchParams.destinationAirportCode && regionFrom?.airports[0];
-    } else if (searchParams["search_type[id]"] === "airports") {
-      shouldFetch = searchParams.originAirportCode &&
-        searchParams.destinationAirportCode;
-    } else if (searchParams["search_type[id]"] === "from-airport-to-region") {
-      shouldFetch = searchParams["region_to"] &&
-        searchParams.originAirportCode && regionTo?.airports[0];
-    } else {
-      shouldFetch = searchParams["region_to"] && regionTo?.airports[0] &&
-        searchParams["region_from"] && regionFrom?.airports[0];
-    }
-    if (!shouldFetch) return null;
-
-    const urlParams = new URLSearchParams(searchParams);
-    history.replaceState(null, "", "?" + urlParams.toString());
-    let flights = null;
-    const month = searchParams["month[id]"];
-    const monthSearch = Boolean(month);
-    for (const controller of abortControllersSignal.value) {
-      controller.abort();
-    }
-    abortControllersSignal.value = [];
-    requestsSignal.value = { status: "loading" };
-    if (monthSearch) {
-      let monthFlights = await findFlightsInMonth({
-        from: searchParams.originAirportCode,
-        regionFrom,
-        to: searchParams.destinationAirportCode,
-        regionTo,
-        month,
-      });
-      flights = monthFlights;
-    } else {
-      flights = await findFlightsForDate({
-        from: searchParams.originAirportCode,
-        regionFrom,
-        to: searchParams.destinationAirportCode,
-        regionTo,
-        date: searchParams.departureDate,
-      });
-    }
-    const initialFilters = {
+export default function FormAndResults({ flights, filtered, params }) {
+  const filtersSignal = useSignal({
+    filtered,
+    filters: {
       "canje[id]": filtros.defaults.canje.id,
-    };
-    const filtered = filterFlights({
-      allFlights: flights,
-      monthSearch,
-      filters: initialFilters,
-    });
-    requestsSignal.value = {
-      status: "finished",
-      data: flights,
-      currentFilters: initialFilters,
-      filtered,
-    };
-  } catch (err) {
-    // if aborted, leave it loading as most likely the user fired another set of requests
-    if (err.name === "AbortError") return null;
-    requestsSignal.value = {
-      status: "finished",
-      data: null,
-      error: err.message,
-    };
-  }
-}
-
-export default function FormAndResults({ params }) {
-  const flights = requestsSignal.value.filtered;
-  const isLoading = requestsSignal.value.status === "loading";
+    }
+  })
   const isMonthSearch = !params.departureDate;
-  const canjeId = requestsSignal.value.currentFilters?.["canje[id]"] ??
-    filtros.defaults.canje.id;
+  const canjeId = filtros.defaults.canje.id;
   const canje = filtros.canje.find((someCanje) => someCanje.id === canjeId);
   return (
     <div class="p-4 gap-4 flex flex-col flex-grow-[1]">
       <Regions />
       <MainForm
         params={params}
-        onSubmit={onSubmit}
         initialMonthSearch={isMonthSearch}
       />
-      {requestsSignal.value.data?.length > 0 && !isLoading && (
+      {flights?.length > 0 && (
         <Filters
           onChange={(newFilters) => {
-            requestsSignal.value = {
-              ...requestsSignal.value,
-              currentFilters: newFilters,
+            filtersSignal.value = {
+              ...filtersSignal.value,
+              filters: newFilters,
               filtered: filterFlights({
-                allFlights: requestsSignal.value.data,
+                allFlights: flights,
                 monthSearch: isMonthSearch,
                 filters: newFilters,
               }),
@@ -131,30 +51,20 @@ export default function FormAndResults({ params }) {
           }}
         />
       )}
-      {requestsSignal.value.status === "not initiated" &&
+      {!flights &&
         (
           <p class="m-auto">
             Elija un origen, un destino y una fecha para buscar.
           </p>
         )}
-      {isLoading && (
-        <div class="m-auto flex flex-col items-center">
-          <Spinner />
-          <p class="my-4">
-            Buscando resultados {requestsSignal.value.message
-              ? `(${requestsSignal.value.message})`
-              : ""}
-          </p>
-        </div>
-      )}
-      {Boolean(requestsSignal.value.error) &&
+      {/*Boolean(requestsSignal.value.error) &&
         requestsSignal.value.status === "finished" && (
         <p class="m-auto">{requestsSignal.value.error}</p>
-      )}
-      {(flights === null || flights?.length === 0) && (
+      )*/}
+      {flights?.length === 0 && (
         <p class="m-auto">No se encontraron vuelos para este tramo.</p>
       )}
-      {flights?.length > 0 && !isLoading &&
+      {filtered?.length > 0 &&
         (
           <div class="max-w-[100vw] overflow-x-auto border border-gray-900">
             <table class="table-auto text-sm text-center min-w-[fit-content] w-full whitespace-nowrap">
@@ -176,7 +86,8 @@ export default function FormAndResults({ params }) {
                 </tr>
               </thead>
               <tbody>
-                {flights.map((flight, i) => {
+                {filtered.map((flight, i) => {
+                  console.log(flight.departureDate)
                   const bgColor = i % 2 === 0 ? "bg-white" : "bg-blue-200";
                   return (
                     <Flight

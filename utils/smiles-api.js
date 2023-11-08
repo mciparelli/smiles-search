@@ -1,46 +1,35 @@
 import FetchRetry from "fetch-retry";
-import Bottleneck from "bottleneck";
-// import { effect } from "@preact/signals";
 import { tripTypes } from "./flight.js";
-import {
-  abortControllersSignal,
-  // concurrencySignal,
-  requestsSignal,
-} from "./signals.js";
 
-const limiter = new Bottleneck({
-  maxConcurrent: 20,
+const client = Deno.createHttpClient({
+  proxy: { 
+    basicAuth: {username: 'customer-mciparelli-cc-br', password: 'Mc33264197'}, 
+    url: `socks5h://pr.oxylabs.io:7777` }
 });
 
-// effect(() => {
-//   limiter.updateSettings({
-//     maxConcurrent: concurrencySignal.value,
-//   });
-// });
-
-const fetch = limiter.wrap(FetchRetry(globalThis.fetch, {
+const fetch = FetchRetry(globalThis.fetch, {
   retryDelay: function (attempt, _error, _response) {
     return Math.pow(2, attempt) * 1000;
   },
   retryOn: async function (attempt, error, response) {
     if (attempt > 3) return false;
+    console.log(attempt,error, error?.name)
     const status = response?.status;
     if (status === 452) {
       const errorResponse = await response.json();
       const errorMessage = errorResponse.error ?? errorResponse.errorMessage;
-      if (!errorMessage.startsWith("TypeError")) throw new Error(errorMessage);
+      if (!errorMessage.startsWith("TypeError")) throw new Error(`${response.url} failed with: ${errorMessage}`);
       console.log(`retrying, attempt number ${attempt + 1}`);
       return true;
     }
     // retry on any network error, or 5xx status codes
     if (error !== null || status >= 500) {
-      if (error?.name === "AbortError") return false;
       console.log(`retrying, attempt number ${attempt + 1}`);
       console.log({ error, status });
       return true;
     }
   },
-}));
+});
 
 const defaultParams = {
   adults: "1",
@@ -85,26 +74,37 @@ async function getTax({ flightUid, fare }) {
   return { miles: tax.miles, money: tax.money };
 }
 
-async function searchFlights(paramsObject) {
+async function fetchWithTimeout(resource, options = {}) {
+  const { timeout = 30000 } = options;
+  
   const controller = new AbortController();
-  abortControllersSignal.value = [...abortControllersSignal.value, controller];
+  const id = setTimeout(() => controller.abort(), timeout);
+
+  const response = await fetch(resource, {
+    ...options,
+    signal: controller.signal  
+  });
+  clearTimeout(id);
+
+  return response;
+}
+
+async function searchFlights(paramsObject) {
   const params = new URLSearchParams({ ...defaultParams, ...paramsObject });
-  const response = await fetch(
+    console.time(params.toString())
+  try {
+  const response = await fetchWithTimeout(
     "https://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search?" +
       params.toString(),
     {
-      signal: controller.signal,
+      client,
       headers,
     },
   );
+  console.timeEnd(params.toString())
   const { requestedFlightSegmentList: [{ flightList }] } = await response
     .json();
   if (flightList.length === 0) return null;
-  requestsSignal.value = {
-    ...requestsSignal.value,
-    message:
-      `${paramsObject.originAirportCode}-${paramsObject.destinationAirportCode} ${paramsObject.departureDate}`,
-  };
   return flightList.map((someFlight) => {
     return someFlight.fareList.map((fare) => {
       return {
@@ -129,6 +129,11 @@ async function searchFlights(paramsObject) {
       };
     });
   }).flat();
+} catch(err) {
+  console.log("https://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search?" +
+      params.toString())
+  return 'failed';
+}
 }
 
 export { getTax, searchFlights };

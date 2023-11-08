@@ -14,7 +14,7 @@ function getLink(flight) {
   const params = new URLSearchParams({
     originAirportCode: flight.origin,
     destinationAirportCode: flight.destination,
-    departureDate: flight.departureDate.getTime(),
+    departureDate: (new Date(flight.departureDate)).getTime(),
     adults: "1",
     infants: "0",
     children: "0",

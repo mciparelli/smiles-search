@@ -6,7 +6,7 @@ function formatFlightDateShort(flightDate) {
   return new Intl.DateTimeFormat("es-AR", {
     day: "numeric",
     month: "numeric",
-  }).format(flightDate);
+  }).format(new Date(flightDate));
 }
 
 function formatFlightDateLong(flightDate) {
@@ -17,7 +17,7 @@ function formatFlightDateLong(flightDate) {
     minute: "numeric",
     hour12: true,
     timeZoneName: "short",
-  }).format(flightDate);
+  }).format(new Date(flightDate));
 }
 
 function formatMonth(date) {
