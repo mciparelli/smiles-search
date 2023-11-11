@@ -90,7 +90,7 @@ async function searchFlights(paramsObject) {
   abortControllersSignal.value = [...abortControllersSignal.value, controller];
   const params = new URLSearchParams({ ...defaultParams, ...paramsObject });
   const response = await fetch(
-    "https://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search?" +
+    "/search?" +
       params.toString(),
     {
       signal: controller.signal,

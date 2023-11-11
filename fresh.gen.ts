@@ -5,6 +5,7 @@
 import * as $0 from "./routes/_404.tsx";
 import * as $1 from "./routes/_app.tsx";
 import * as $2 from "./routes/index.tsx";
+import * as $3 from "./routes/search.js";
 import * as $$0 from "./islands/filters.jsx";
 import * as $$1 from "./islands/footer.jsx";
 import * as $$2 from "./islands/form-and-results.jsx";
@@ -15,6 +16,7 @@ const manifest = {
     "./routes/_404.tsx": $0,
     "./routes/_app.tsx": $1,
     "./routes/index.tsx": $2,
+    "./routes/search.js": $3,
   },
   islands: {
     "./islands/filters.jsx": $$0,
