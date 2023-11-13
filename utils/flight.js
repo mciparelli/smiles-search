@@ -1,4 +1,4 @@
-import { resultadosSignal } from "./signals.js";
+import { resultadosSignal, smilesAndMoneySignal } from "./signals.js";
 
 const fares = {
   moneyClub: "SMILES_MONEY_CLUB",
@@ -157,7 +157,7 @@ const filtros = {
   },
 };
 
-function filterFlights({ allFlights, monthSearch, filters }) {
+function filterFlights({ allFlights, monthSearch, filters = {} }) {
   const airlineCodes = Object.entries(filters).filter(([key, _value]) =>
     key.startsWith("airlines") && key.endsWith("[id]")
   ).map(([_key, value]) => value);
@@ -167,8 +167,8 @@ function filterFlights({ allFlights, monthSearch, filters }) {
       stopsFilter = true,
       viajeFacilFilter = true,
       tarifaFilter = true,
-      canjeFilter = true,
-      hoursFilter = true;
+      hoursFilter = true,
+      canjeFilter = smilesAndMoneySignal.value ? someFlight.fare.type === fares.moneyClub : someFlight.fare.type === fares.club;
     if (
       filters["cabinType[id]"] &&
       filters["cabinType[id]"] !== filtros.defaults.cabina.id
@@ -192,9 +192,6 @@ function filterFlights({ allFlights, monthSearch, filters }) {
       filters["tarifa[id]"] !== filtros.defaults.tarifas.id
     ) {
       tarifaFilter = someFlight.fareType === filters["tarifa[id]"];
-    }
-    if (filters["canje[id]"]) {
-      canjeFilter = someFlight.fare.type === filters["canje[id]"];
     }
     if (filters["maxhours"]) {
       hoursFilter = someFlight.durationInHours <= Number(filters["maxhours"]);

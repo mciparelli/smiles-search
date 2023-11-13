@@ -1,4 +1,5 @@
 import { createClient } from '@libsql/client';
+import "$std/dotenv/load.ts";
 
 const client = createClient({
   url: Deno.env.get('DB_URL'),

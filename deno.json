@@ -2,8 +2,8 @@
   "lock": false,
   "tasks": {
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
-    "start": "deno run -A --watch=static/,routes/ --unstable dev.ts",
-    "build": "deno run -A --unstable dev.ts build",
+    "start": "deno run -A --watch=static/,routes/ dev.ts",
+    "build": "deno run -A dev.ts build",
     "preview": "deno run -A main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
@@ -32,7 +32,8 @@
     "islands/": "./islands/",
     "juani/": "https://esm.sh/gh/juanidambrosio/smileshelper/",
     "cachified": "https://esm.sh/cachified@3.5.4",
-    "@libsql/client": "https://esm.sh/@libsql/client@0.3.6"
+    "@libsql/client": "https://esm.sh/@libsql/client@0.3.6",
+    "https-proxy-agent": "https://esm.sh/https-proxy-agent@7.0.0"
   },
   "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" },
   "exclude": ["**/_fresh/*"]

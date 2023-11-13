@@ -1,11 +1,8 @@
+// import { HttpsProxyAgent } from 'https-proxy-agent';
 import { cachified, verboseReporter } from 'cachified';
 import makeCache from 'utils/cache.js';
 
-const client = Deno.createHttpClient({
-  proxy: { 
-    basicAuth: {username: Deno.env.get('PROXY_USER'), password: Deno.env.get('PROXY_PW')}, 
-    url: `socks5h://pr.oxylabs.io:7777` }
-});
+// const proxies = JSON.parse(Deno.env.get('PROXIES'));
 
 const headers = {
   authorization:
@@ -22,8 +19,9 @@ function searchCached(params) {
     key: `${params.get('originAirportCode')}:${params.get('destinationAirportCode')}:${params.get('departureDate')}`,
     cache: makeCache('smiles'),
     getFreshValue() {
+      // const proxy = proxies[Math.floor(Math.random() * proxies.length)];
+      // const agent = new HttpsProxyAgent(proxy);
       return fetch('https://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search?' + params.toString(), {
-        client,
         headers
       }).then(res => res.json());
     },

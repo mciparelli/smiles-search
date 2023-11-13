@@ -7,6 +7,7 @@ const requestsSignal = signal({});
 const abortControllersSignal = signal([]);
 const resultadosSignal = persistedSignal(10, "smiles:resultados");
 const concurrencySignal = persistedSignal(20, "smiles:concurrency");
+const smilesAndMoneySignal = persistedSignal(false, "smiles:smiles-and-money");
 
 const defaultRegions = Object.entries(defaultRegionsObject).map((
   [name, airports],
@@ -22,4 +23,5 @@ export {
   regionsSignal,
   requestsSignal,
   resultadosSignal,
+  smilesAndMoneySignal
 };

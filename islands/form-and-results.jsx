@@ -1,4 +1,4 @@
-import { signal, useSignal } from "@preact/signals";
+import { signal, useComputed, useSignal } from "@preact/signals";
 import { formatFlightDateLong, formatFlightDateShort } from "utils/dates.js";
 import {
   filterFlights,
@@ -18,7 +18,7 @@ import Spinner from "components/spinner.jsx";
 import Flight from "components/flight.jsx";
 import { CheckIcon } from "icons";
 import Regions from "components/regions.jsx";
-import { regionsSignal } from "utils/signals.js";
+import { regionsSignal, smilesAndMoneySignal } from "utils/signals.js";
 
 async function onSubmit(searchParams) {
   try {
@@ -76,18 +76,13 @@ async function onSubmit(searchParams) {
         date: searchParams.departureDate,
       });
     }
-    const initialFilters = {
-      "canje[id]": filtros.defaults.canje.id,
-    };
     const filtered = filterFlights({
       allFlights: flights,
       monthSearch,
-      filters: initialFilters,
     });
     requestsSignal.value = {
       status: "finished",
       data: flights,
-      currentFilters: initialFilters,
       filtered,
     };
   } catch (err) {
@@ -105,9 +100,7 @@ export default function FormAndResults({ params }) {
   const flights = requestsSignal.value.filtered;
   const isLoading = requestsSignal.value.status === "loading";
   const isMonthSearch = !params.departureDate;
-  const canjeId = requestsSignal.value.currentFilters?.["canje[id]"] ??
-    filtros.defaults.canje.id;
-  const canje = filtros.canje.find((someCanje) => someCanje.id === canjeId);
+  const canje = useComputed(() => smilesAndMoneySignal.value ? filtros.canje[1] : filtros.canje[0])
   return (
     <div class="p-4 gap-4 flex flex-col flex-grow-[1]">
       <Regions />
@@ -121,7 +114,6 @@ export default function FormAndResults({ params }) {
           onChange={(newFilters) => {
             requestsSignal.value = {
               ...requestsSignal.value,
-              currentFilters: newFilters,
               filtered: filterFlights({
                 allFlights: requestsSignal.value.data,
                 monthSearch: isMonthSearch,
@@ -163,7 +155,7 @@ export default function FormAndResults({ params }) {
                   <th class="py-4 bg-blue-400 px-2">Tramo</th>
                   <th class="bg-blue-400 px-2">Fecha y hora</th>
                   <th class="bg-blue-400 px-2 lg:hidden">
-                    {canje.name} + Tasas
+                    {canje.value.name} + Tasas
                   </th>
                   <th class="bg-blue-400 px-2">Aerolínea</th>
                   <th class="bg-blue-400 px-2">Cabina</th>
@@ -171,7 +163,7 @@ export default function FormAndResults({ params }) {
                   <th class="bg-blue-400 px-2">Duración</th>
                   <th class="bg-blue-400 px-2">Asientos</th>
                   <th class="bg-blue-400 px-2 hidden lg:table-cell">
-                    {canje.name} + Tasas
+                    {canje.value.name} + Tasas
                   </th>
                 </tr>
               </thead>
@@ -183,7 +175,7 @@ export default function FormAndResults({ params }) {
                       key={flight.uid}
                       bgColor={bgColor}
                       flight={flight}
-                      canje={canje}
+                      canje={canje.value}
                     />
                   );
                 })}
