@@ -11,7 +11,6 @@ export default function OriginDestinationInputs({ defaults, searchType }) {
       {["from-region-to-airport", "from-region-to-region"].includes(searchType)
         ? (
           <RegionsDropdown
-            defaultValue={defaults["region_from"]}
             name="region_from"
             class="w-32"
             placeholder="Desde"
@@ -35,7 +34,6 @@ export default function OriginDestinationInputs({ defaults, searchType }) {
       {["from-airport-to-region", "from-region-to-region"].includes(searchType)
         ? (
           <RegionsDropdown
-            defaultValue={defaults["region_to"]}
             name="region_to"
             class="w-32"
             placeholder="Hasta"

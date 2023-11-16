@@ -1,7 +1,6 @@
 import FetchRetry from "fetch-retry";
 import { tripTypes } from "./flight.js";
 import {
-  abortControllersSignal,
   requestsSignal,
 } from "./signals.js";
 
@@ -73,25 +72,17 @@ async function getTax({ flightUid, fare }) {
 }
 
 async function searchFlights(paramsObject) {
-  const controller = new AbortController();
-  abortControllersSignal.value = [...abortControllersSignal.value, controller];
   const params = new URLSearchParams({ ...defaultParams, ...paramsObject });
   const response = await fetch(
-    "/search?" +
+    "https://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search?" +
       params.toString(),
     {
-      signal: controller.signal,
       headers,
     },
   );
   const { requestedFlightSegmentList: [{ flightList }] } = await response
     .json();
   if (flightList.length === 0) return null;
-  requestsSignal.value = {
-    ...requestsSignal.value,
-    message:
-      `${paramsObject.originAirportCode}-${paramsObject.destinationAirportCode} ${paramsObject.departureDate}`,
-  };
   return flightList.map((someFlight) => {
     return someFlight.fareList.map((fare) => {
       return {

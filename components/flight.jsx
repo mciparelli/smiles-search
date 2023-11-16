@@ -40,10 +40,10 @@ export default function Flight({ flight, canje, bgColor }) {
         </a>
       </td>
       <td class={`${bgColor} py-px-2 md:hidden`}>
-        {formatFlightDateShort(flight.departureDate)}
+        {formatFlightDateShort(new Date(flight.departureDate))}
       </td>
       <td class={`${bgColor} py-px-2 hidden md:table-cell`}>
-        {formatFlightDateLong(flight.departureDate)}
+        {formatFlightDateLong(new Date(flight.departureDate))}
       </td>
       <td class={`${bgColor} px-2 lg:hidden`}>
         <div class="inline-flex">

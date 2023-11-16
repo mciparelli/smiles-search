@@ -8,7 +8,6 @@ import {
   months,
   today,
 } from "utils/dates.js";
-import { findFlightsForDate, findFlightsInMonth } from "api";
 import MonthSearchSwitch from "components/month-search-switch.jsx";
 import MonthsDropdown from "components/months-dropdown.jsx";
 import SearchTypeDropdown from "components/search-type-dropdown.jsx";

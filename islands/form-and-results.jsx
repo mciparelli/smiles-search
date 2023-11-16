@@ -3,15 +3,12 @@ import { formatFlightDateLong, formatFlightDateShort } from "utils/dates.js";
 import {
   filterFlights,
   filtros,
-  getLink,
-  sortByMilesAndTaxes,
 } from "utils/flight.js";
 import {
   abortControllersSignal,
   requestsSignal,
   resultadosSignal,
 } from "utils/signals.js";
-import { apiPath, findFlightsForDate, findFlightsInMonth } from "api";
 import MainForm from "./main-form.jsx";
 import Filters from "./filters.jsx";
 import Spinner from "components/spinner.jsx";
@@ -49,36 +46,19 @@ async function onSubmit(searchParams) {
     if (!shouldFetch) return null;
 
     const urlParams = new URLSearchParams(searchParams);
+    if (regionFrom) {
+      urlParams.set('region_from', JSON.stringify(regionFrom.airports))
+    }
+    if (regionTo) {
+      urlParams.set('region_to', JSON.stringify(regionTo.airports))
+    }
     history.replaceState(null, "", "?" + urlParams.toString());
-    let flights = null;
-    const month = searchParams["month[id]"];
-    const monthSearch = Boolean(month);
-    for (const controller of abortControllersSignal.value) {
-      controller.abort();
-    }
-    abortControllersSignal.value = [];
     requestsSignal.value = { status: "loading" };
-    if (monthSearch) {
-      let monthFlights = await findFlightsInMonth({
-        from: searchParams.originAirportCode,
-        regionFrom,
-        to: searchParams.destinationAirportCode,
-        regionTo,
-        month,
-      });
-      flights = monthFlights;
-    } else {
-      flights = await findFlightsForDate({
-        from: searchParams.originAirportCode,
-        regionFrom,
-        to: searchParams.destinationAirportCode,
-        regionTo,
-        date: searchParams.departureDate,
-      });
-    }
+    const res = await fetch('/search?' + urlParams.toString());
+    const flights = await res.json();
     const filtered = filterFlights({
       allFlights: flights,
-      monthSearch,
+      monthSearch: Boolean(urlParams.get('month[id]')),
     });
     requestsSignal.value = {
       status: "finished",

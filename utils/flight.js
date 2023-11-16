@@ -1,5 +1,20 @@
 import { resultadosSignal, smilesAndMoneySignal } from "./signals.js";
 
+function sortByMilesAndTaxes(flightList) {
+  return flightList.sort(
+    (a, b) => {
+      if (a.fare.miles === b.fare.miles) {
+        if (a.fare.money === b.fare.money) {
+          return a.fare.airlineTax - b.fare.airlineTax;
+        } else {
+          return a.fare.money - b.fare.money;
+        }
+      }
+      return a.fare.miles - b.fare.miles;
+    },
+  );
+}
+
 const fares = {
   moneyClub: "SMILES_MONEY_CLUB",
   club: "SMILES_CLUB",
@@ -14,7 +29,7 @@ function getLink(flight) {
   const params = new URLSearchParams({
     originAirportCode: flight.origin,
     destinationAirportCode: flight.destination,
-    departureDate: flight.departureDate.getTime(),
+    departureDate: new Date(flight.departureDate).getTime(),
     adults: "1",
     infants: "0",
     children: "0",
@@ -22,21 +37,6 @@ function getLink(flight) {
     tripType: tripTypes.ONE_WAY,
   });
   return `https://www.smiles.com.ar/emission?${params.toString()}`;
-}
-
-function sortByMilesAndTaxes(flightList) {
-  return flightList.sort(
-    (a, b) => {
-      if (a.fare.miles === b.fare.miles) {
-        if (a.fare.money === b.fare.money) {
-          return a.fare.airlineTax - b.fare.airlineTax;
-        } else {
-          return a.fare.money - b.fare.money;
-        }
-      }
-      return a.fare.miles - b.fare.miles;
-    },
-  );
 }
 
 const cabinas = [

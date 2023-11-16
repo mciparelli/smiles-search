@@ -1,40 +1,30 @@
-// import { HttpsProxyAgent } from 'https-proxy-agent';
-import { cachified, verboseReporter } from 'cachified';
-import makeCache from 'utils/cache.js';
+import { findCachedFlights, findFlightsForDate, findFlightsInMonth } from 'utils/api.js';
 
-// const proxies = JSON.parse(Deno.env.get('PROXIES'));
-
-const headers = {
-  authorization:
-    "Bearer Ghlpz2Fv1P5k9zGSUz2Z3l5jdVmy0aNECen0CV5v1sevBwTX9cA9kc",
-  "x-api-key": "aJqPU7xNHl9qN3NVZnPaJ208aPo2Bh2p2ZV844tw",
-  "Content-Type": "application/json",
-  Accept: "application/json",
-  region: "ARGENTINA",
-};
-
-function searchCached(params) {
-  return cachified({
-    reporter: verboseReporter(),
-    key: `${params.get('originAirportCode')}:${params.get('destinationAirportCode')}:${params.get('departureDate')}`,
-    cache: makeCache('smiles'),
-    getFreshValue() {
-      // const proxy = proxies[Math.floor(Math.random() * proxies.length)];
-      // const agent = new HttpsProxyAgent(proxy);
-      return fetch('https://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search?' + params.toString(), {
-        headers
-      }).then(res => res.json());
-    },
-    // good for 12 hours
-    ttl: 1000 * 60 * 60 * 12,
-    // one year
-    swr: 1000 * 60 * 60 * 24 * 365
-  }); 
+function searchFlights(params) {
+  const month = params.get('month[id]');
+  const monthSearch = Boolean(month);
+  const regionFrom = params.get('region_from') ? JSON.parse(params.get('region_from')) : null;
+  const regionTo = params.get('region_to') ? JSON.parse(params.get('region_to')) : null;
+  const from = regionFrom ?? [params.get('originAirportCode')];
+  const to = regionTo ?? [params.get('destinationAirportCode')];
+  if (monthSearch) {
+    return findFlightsInMonth({
+      from,
+      to,
+      month,
+    });
+  }
+  return findCachedFlights({
+    from,
+    to,
+    date: params.get('departureDate'),
+  });
 }
 
 export async function handler(req) {
   const url = new URL(req.url);
-  const value = await searchCached(url.searchParams);
+  // const value = await getFreshValue(url.searchParams);
+  const value = await searchFlights(url.searchParams);
   return new Response(JSON.stringify(value), {
     headers: { "Content-Type": "application/json" },
   });

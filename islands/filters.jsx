@@ -4,7 +4,6 @@ import { filtros } from "utils/flight.js";
 import { resultadosSignal, smilesAndMoneySignal } from "utils/signals.js";
 import Dropdown from "components/dropdown.jsx";
 import Collapsible from "components/collapsible.jsx";
-import { apiPath } from "api";
 import { Switch } from "@headlessui/react";
 
 export default function Filtros({ onChange }) {
