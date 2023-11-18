@@ -137,7 +137,7 @@ export default function Filtros({ onChange }) {
         <Switch
           name="smiles-and-money"
           checked={smilesAndMoneySignal.value}
-          onChange={(newValue) => {   
+          onChange={(newValue) => {
             smilesAndMoneySignal.value = newValue;
             const event = new Event("change");
             requestAnimationFrame(() => {

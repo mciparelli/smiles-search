@@ -168,7 +168,9 @@ function filterFlights({ allFlights, monthSearch, filters = {} }) {
       viajeFacilFilter = true,
       tarifaFilter = true,
       hoursFilter = true,
-      canjeFilter = smilesAndMoneySignal.value ? someFlight.fare.type === fares.moneyClub : someFlight.fare.type === fares.club;
+      canjeFilter = smilesAndMoneySignal.value
+        ? someFlight.fare.type === fares.moneyClub
+        : someFlight.fare.type === fares.club;
     if (
       filters["cabinType[id]"] &&
       filters["cabinType[id]"] !== filtros.defaults.cabina.id

@@ -23,5 +23,5 @@ export {
   regionsSignal,
   requestsSignal,
   resultadosSignal,
-  smilesAndMoneySignal
+  smilesAndMoneySignal,
 };

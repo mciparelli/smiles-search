@@ -1,6 +1,6 @@
-const kv = await Deno.openKv(Deno.env.get('DB_URL'));
+const kv = await Deno.openKv(Deno.env.get("DB_URL"));
 async function set(key, value) {
-  await kv.set([key], value)
+  await kv.set([key], value);
 }
 
 async function get(key) {
@@ -12,4 +12,4 @@ async function remove(key) {
   await kv.delete([key]);
 }
 
-export { get, set, remove }
+export { get, remove, set };

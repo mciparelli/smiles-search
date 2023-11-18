@@ -1,10 +1,7 @@
 import FetchRetry from "fetch-retry";
 import { tripTypes } from "./flight.js";
-import {
-  requestsSignal,
-} from "./signals.js";
 
-const fetch = (FetchRetry(globalThis.fetch, {
+const fetch = FetchRetry(globalThis.fetch, {
   retryDelay: function (attempt, _error, _response) {
     return Math.pow(2, attempt) * 1000;
   },
@@ -26,7 +23,7 @@ const fetch = (FetchRetry(globalThis.fetch, {
       return true;
     }
   },
-}));
+});
 
 const defaultParams = {
   adults: "1",
@@ -72,6 +69,9 @@ async function getTax({ flightUid, fare }) {
 }
 
 async function searchFlights(paramsObject) {
+  if (paramsObject.originAirportCode === paramsObject.destinationAirportCode) {
+    return null;
+  }
   const params = new URLSearchParams({ ...defaultParams, ...paramsObject });
   const response = await fetch(
     "https://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search?" +

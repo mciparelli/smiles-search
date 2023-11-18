@@ -1,9 +1,6 @@
 import { signal, useComputed, useSignal } from "@preact/signals";
 import { formatFlightDateLong, formatFlightDateShort } from "utils/dates.js";
-import {
-  filterFlights,
-  filtros,
-} from "utils/flight.js";
+import { filterFlights, filtros } from "utils/flight.js";
 import {
   abortControllersSignal,
   requestsSignal,
@@ -47,18 +44,18 @@ async function onSubmit(searchParams) {
 
     const urlParams = new URLSearchParams(searchParams);
     if (regionFrom) {
-      urlParams.set('region_from', JSON.stringify(regionFrom.airports))
+      urlParams.set("region_from", JSON.stringify(regionFrom.airports));
     }
     if (regionTo) {
-      urlParams.set('region_to', JSON.stringify(regionTo.airports))
+      urlParams.set("region_to", JSON.stringify(regionTo.airports));
     }
     history.replaceState(null, "", "?" + urlParams.toString());
     requestsSignal.value = { status: "loading" };
-    const res = await fetch('/search?' + urlParams.toString());
+    const res = await fetch("/search?" + urlParams.toString());
     const flights = await res.json();
     const filtered = filterFlights({
       allFlights: flights,
-      monthSearch: Boolean(urlParams.get('month[id]')),
+      monthSearch: Boolean(urlParams.get("month[id]")),
     });
     requestsSignal.value = {
       status: "finished",
@@ -80,7 +77,9 @@ export default function FormAndResults({ params }) {
   const flights = requestsSignal.value.filtered;
   const isLoading = requestsSignal.value.status === "loading";
   const isMonthSearch = !params.departureDate;
-  const canje = useComputed(() => smilesAndMoneySignal.value ? filtros.canje[1] : filtros.canje[0])
+  const canje = useComputed(() =>
+    smilesAndMoneySignal.value ? filtros.canje[1] : filtros.canje[0]
+  );
   return (
     <div class="p-4 gap-4 flex flex-col flex-grow-[1]">
       <Regions />
