@@ -58,7 +58,7 @@ function findFlightsInMonth({ from, to, month }) {
   do {
     if (minDate <= currentDay && maxDate >= currentDay) {
       const date = formatDate(currentDay);
-      const dayFlightsPromise = findCachedFlights({
+      const dayFlightsPromise = findFlightsForDate({
         from,
         to,
         date,
