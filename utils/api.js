@@ -36,6 +36,7 @@ async function findFlightsForDate({ from, to, date }) {
   let flightPromises = [];
   for (const airportFrom of from) {
     for (const airportTo of to) {
+      if (airportFrom === airportTo) continue;
       flightPromises = [
         ...flightPromises,
         searchCachedFlights({

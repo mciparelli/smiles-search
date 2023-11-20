@@ -69,9 +69,6 @@ async function getTax({ flightUid, fare }) {
 }
 
 async function searchFlights(paramsObject) {
-  if (paramsObject.originAirportCode === paramsObject.destinationAirportCode) {
-    return null;
-  }
   const params = new URLSearchParams({ ...defaultParams, ...paramsObject });
   const response = await fetch(
     "https://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search?" +
