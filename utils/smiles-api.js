@@ -1,5 +1,4 @@
 import FetchRetry from "fetch-retry";
-import Bottleneck from "bottleneck";
 // import { effect } from "@preact/signals";
 import { tripTypes } from "./flight.js";
 import {
@@ -8,17 +7,13 @@ import {
   requestsSignal,
 } from "./signals.js";
 
-const limiter = new Bottleneck({
-  maxConcurrent: 20,
-});
-
 // effect(() => {
 //   limiter.updateSettings({
 //     maxConcurrent: concurrencySignal.value,
 //   });
 // });
 
-const fetch = limiter.wrap(FetchRetry(globalThis.fetch, {
+const fetch = FetchRetry(globalThis.fetch, {
   retryDelay: function (attempt, _error, _response) {
     return Math.pow(2, attempt) * 1000;
   },
@@ -40,7 +35,7 @@ const fetch = limiter.wrap(FetchRetry(globalThis.fetch, {
       return true;
     }
   },
-}));
+});
 
 const defaultParams = {
   adults: "1",

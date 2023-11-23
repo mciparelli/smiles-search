@@ -1,6 +1,6 @@
-import { useRef } from 'preact/hooks';
+import { useRef } from "preact/hooks";
 import { filtros } from "utils/flight.js";
-import { ArrowPathIcon } from 'icons';
+import { ArrowPathIcon } from "icons";
 import RegionsDropdown from "./regions-dropdown.jsx";
 
 export default function OriginDestinationInputs({ defaults, searchType }) {
@@ -56,11 +56,19 @@ export default function OriginDestinationInputs({ defaults, searchType }) {
             autoFocus
           />
         )}
-      {"airports" === searchType && <button type="button" class="px-2"><ArrowPathIcon class="h-5 w-5" aria-hidden="true" onClick={() => {
-        const currentOrigin = originRef.current.value;
-        originRef.current.value = destinationRef.current.value;
-        destinationRef.current.value = currentOrigin;
-      }} /></button>}
+      {"airports" === searchType && (
+        <button type="button" class="px-2">
+          <ArrowPathIcon
+            class="h-5 w-5"
+            aria-hidden="true"
+            onClick={() => {
+              const currentOrigin = originRef.current.value;
+              originRef.current.value = destinationRef.current.value;
+              destinationRef.current.value = currentOrigin;
+            }}
+          />
+        </button>
+      )}
     </fieldset>
   );
 }
