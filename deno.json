@@ -3,7 +3,7 @@
   "tasks": {
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
     "start": "deno run -A --watch=static/,routes/ --unstable --env dev.ts",
-    "build": "deno run -A dev.ts build",
+    "build": "deno run -A --unstable dev.ts build",
     "preview": "deno run -A --unstable main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update .",
     "seed": "deno run -A --unstable --env seed.ts"
