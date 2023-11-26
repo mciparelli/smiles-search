@@ -25,7 +25,6 @@
     "icons": "https://esm.sh/@heroicons/react@2.0.18/24/solid?alias=react:preact/compat&exports=ArrowPathIcon,CheckIcon,ChevronUpIcon,ChevronDownIcon,ChevronUpDownIcon,InformationCircleIcon",
     "react-confetti-explosion": "https://esm.sh/react-confetti-explosion?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat&external=preact",
     "fetch-retry": "https://esm.sh/fetch-retry",
-    "bottleneck": "https://esm.sh/bottleneck",
     "swr": "https://esm.sh/swr?alias=react:preact/compat&external=preact",
     "components/": "./components/",
     "utils/": "./utils/",
