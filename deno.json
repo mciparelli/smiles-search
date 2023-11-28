@@ -22,18 +22,17 @@
     "twind/": "https://esm.sh/twind@0.16.19/",
     "$std/": "https://deno.land/std@0.193.0/",
     "@headlessui/react": "https://esm.sh/@headlessui/react?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat&external=preact",
-    "icons": "https://esm.sh/@heroicons/react@2.0.18/24/solid?alias=react:preact/compat&exports=ArrowPathIcon,CheckIcon,ChevronUpIcon,ChevronDownIcon,ChevronUpDownIcon,InformationCircleIcon",
+    "icons": "https://esm.sh/@heroicons/react/24/solid?alias=react:preact/compat",
     "react-confetti-explosion": "https://esm.sh/react-confetti-explosion?alias=react:preact/compat,react-dom:preact/compat,@types/react:preact/compat&external=preact",
     "fetch-retry": "https://esm.sh/fetch-retry",
-    "swr": "https://esm.sh/swr?alias=react:preact/compat&external=preact",
+    "swr": "https://esm.sh/swr@1?alias=react:preact/compat&external=preact",
     "components/": "./components/",
     "utils/": "./utils/",
     "api": "./utils/api.js",
     "islands/": "./islands/",
     "juani/": "https://esm.sh/gh/juanidambrosio/smileshelper/",
     "cachified": "https://esm.sh/cachified@3.5.4",
-    "@libsql/client": "https://esm.sh/@libsql/client@0.3.6",
-    "https-proxy-agent": "https://esm.sh/https-proxy-agent@7.0.0"
+    "@libsql/client": "https://esm.sh/@libsql/client@0.3.6"
   },
   "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" },
   "exclude": ["**/_fresh/*"]
