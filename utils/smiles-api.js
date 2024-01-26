@@ -46,7 +46,7 @@ const defaultParams = {
   r: "ar",
   tripType: tripTypes.ONE_WAY,
   cabinType: "all",
-  forceCongener: false,
+  forceCongener: true,
 };
 
 const headers = {
