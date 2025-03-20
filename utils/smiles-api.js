@@ -70,9 +70,9 @@ async function getTax({ flightUid, fare }) {
   });
 
   const response = await fetch(
-    Deno.env.get("SMILES_TAX_URL") +
-      "?" +
-      params.toString(),
+    window.SMILES_TAX_URL +
+    "?" +
+    params.toString(),
     {
       headers,
     },
@@ -86,8 +86,8 @@ async function searchFlights(paramsObject) {
   abortControllersSignal.value = [...abortControllersSignal.value, controller];
   const params = new URLSearchParams({ ...defaultParams, ...paramsObject });
   const response = await fetch(
-    Deno.env.get("SMILES_SEARCH_URL") + "?" +
-      params.toString(),
+    window.SMILES_SEARCH_URL + "?" +
+    params.toString(),
     {
       signal: controller.signal,
       headers,

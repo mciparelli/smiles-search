@@ -1,5 +1,6 @@
 import { AppProps } from "$fresh/server.ts";
 import Footer from "islands/footer.jsx";
+import "https://deno.land/x/dotenv/load.ts";
 
 const isDenoDeploy = Deno.env.get("DENO_DEPLOYMENT_ID") !== undefined;
 
@@ -10,6 +11,14 @@ export default function App({ Component }: AppProps) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Smiles Search</title>
+
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.SMILES_SEARCH_URL = "${
+              Deno.env.get("SMILES_SEARCH_URL")
+            }"; window.SMILES_TAX_URL = "${Deno.env.get("SMILES_TAX_URL")}";`,
+          }}
+        />
         {/* posthog */}
         {isDenoDeploy
           ? (
