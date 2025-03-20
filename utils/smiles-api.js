@@ -70,7 +70,8 @@ async function getTax({ flightUid, fare }) {
   });
 
   const response = await fetch(
-    "https://api-airlines-boarding-tax-prd.smiles.com.br/v1/airlines/flight/boardingtax?" +
+    Deno.env.get("SMILES_TAX_URL") +
+      "?" +
       params.toString(),
     {
       headers,
@@ -85,7 +86,7 @@ async function searchFlights(paramsObject) {
   abortControllersSignal.value = [...abortControllersSignal.value, controller];
   const params = new URLSearchParams({ ...defaultParams, ...paramsObject });
   const response = await fetch(
-    "https://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search?" +
+    Deno.env.get("SMILES_SEARCH_URL") + "?" +
       params.toString(),
     {
       signal: controller.signal,

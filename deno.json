@@ -12,7 +12,9 @@
       "tags": [
         "recommended"
       ],
-      "exclude": ["prefer-const"]
+      "exclude": [
+        "prefer-const"
+      ]
     },
     "exclude": [
       "_fresh"
@@ -47,5 +49,12 @@
     "exclude": [
       "_fresh"
     ]
+  },
+  "deploy": {
+    "project": "smiles-search",
+    "exclude": [
+      "**/node_modules"
+    ],
+    "entrypoint": "main.ts"
   }
 }
