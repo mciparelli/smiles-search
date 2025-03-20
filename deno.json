@@ -39,7 +39,7 @@
     "utils/": "./utils/",
     "api": "./utils/api.js",
     "islands/": "./islands/",
-    "juani/": "https://esm.sh/gh/juanidambrosio/smileshelper/"
+    "p-throttle": "https://esm.sh/p-throttle"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

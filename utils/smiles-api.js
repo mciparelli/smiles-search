@@ -48,16 +48,6 @@ const defaultParams = {
   cabinType: "all",
   forceCongener: true,
 };
-
-const headers = {
-  authorization:
-    "Bearer Ghlpz2Fv1P5k9zGSUz2Z3l5jdVmy0aNECen0CV5v1sevBwTX9cA9kc",
-  "x-api-key": "aJqPU7xNHl9qN3NVZnPaJ208aPo2Bh2p2ZV844tw",
-  "Content-Type": "application/json",
-  Accept: "application/json",
-  region: "ARGENTINA",
-};
-
 async function getTax({ flightUid, fare }) {
   const params = new URLSearchParams({
     adults: "1",
@@ -69,13 +59,9 @@ async function getTax({ flightUid, fare }) {
     highlightText: fare.type,
   });
 
-  const response = await fetch(
-    window.SMILES_TAX_URL +
-    "?" +
+  const response = await globalThis.fetch(
+    "/tax?" +
     params.toString(),
-    {
-      headers,
-    },
   );
   const { totals: { totalBoardingTax: tax } } = await response.json();
   return { miles: tax.miles, money: tax.money };
@@ -86,13 +72,13 @@ async function searchFlights(paramsObject) {
   abortControllersSignal.value = [...abortControllersSignal.value, controller];
   const params = new URLSearchParams({ ...defaultParams, ...paramsObject });
   const response = await fetch(
-    window.SMILES_SEARCH_URL + "?" +
+    "/search?" +
     params.toString(),
     {
       signal: controller.signal,
-      headers,
     },
   );
+  if (!response.ok) return null;
   const { requestedFlightSegmentList: [{ flightList }] } = await response
     .json();
   if (flightList.length === 0) return null;
