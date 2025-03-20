@@ -1,7 +1,7 @@
 import { signal } from "@preact/signals";
 import { persistedSignal } from "./storage.ts";
 import { EMPTY_REGION } from "utils/constants.js";
-import defaultRegionsObject from "juani/data/regions.js";
+import defaultRegionsObject from "utils/regions.js";
 
 const requestsSignal = signal({});
 const abortControllersSignal = signal([]);
