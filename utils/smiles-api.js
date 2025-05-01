@@ -59,11 +59,10 @@ async function getTax({ flightUid, fare }) {
     highlightText: fare.type,
   });
 
-  const response = await globalThis.fetch(
-    "/tax?" +
-    params.toString(),
-  );
-  const { totals: { totalBoardingTax: tax } } = await response.json();
+  const response = await globalThis.fetch("/tax?" + params.toString());
+  const {
+    totals: { totalBoardingTax: tax },
+  } = await response.json();
   return { miles: tax.miles, money: tax.money };
 }
 
@@ -71,46 +70,20 @@ async function searchFlights(paramsObject) {
   const controller = new AbortController();
   abortControllersSignal.value = [...abortControllersSignal.value, controller];
   const params = new URLSearchParams({ ...defaultParams, ...paramsObject });
+  params.set("departureDate", new Date(paramsObject.departureDate).getTime());
   const response = await fetch(
-    "/search?" +
-    params.toString(),
+    window.SEARCH_URL + "/search?" + params.toString(),
     {
       signal: controller.signal,
     },
   );
   if (!response.ok) return null;
-  const { requestedFlightSegmentList: [{ flightList }] } = await response
-    .json();
-  if (flightList.length === 0) return null;
   requestsSignal.value = {
     ...requestsSignal.value,
     message:
       `${paramsObject.originAirportCode}-${paramsObject.destinationAirportCode} ${paramsObject.departureDate}`,
   };
-  return flightList.map((someFlight) => {
-    return someFlight.fareList.map((fare) => {
-      return {
-        uid: someFlight.uid,
-        origin: someFlight.departure.airport.code,
-        destination: someFlight.arrival.airport.code,
-        viajeFacil: someFlight.codeContext === "FFY",
-        fare: {
-          airlineTax: fare.airlineTax,
-          uid: fare.uid,
-          miles: fare.miles,
-          money: fare.money,
-          type: fare.type,
-        },
-        fareType: someFlight.sourceFare,
-        departureDate: new Date(someFlight.departure.date),
-        stops: someFlight.stops,
-        durationInHours: someFlight.duration.hours,
-        airline: someFlight.airline,
-        availableSeats: someFlight.availableSeats,
-        cabin: someFlight.cabin,
-      };
-    });
-  }).flat();
+  return response.json();
 }
 
 export { getTax, searchFlights };

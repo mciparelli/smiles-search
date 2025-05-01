@@ -7,18 +7,15 @@ const throttle = pThrottle({
 });
 
 let throttledSearch = throttle((queryString) => {
-  return fetch(
-    Deno.env.get("TAX_URL") + "/flight/boardingtax?" + queryString,
-    {
-      headers: {
-        authorization: "Bearer " + Deno.env.get("AUTH_TOKEN"),
-        "x-api-key": Deno.env.get("API_KEY"),
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        region: "ARGENTINA",
-      },
+  return fetch(Deno.env.get("TAX_URL") + "/flight/boardingtax?" + queryString, {
+    headers: {
+      authorization: "Bearer " + Deno.env.get("AUTH_TOKEN"),
+      "x-api-key": Deno.env.get("API_KEY"),
+      "Content-Type": "application/json",
+      Accept: "*/*",
+      region: "ARGENTINA",
     },
-  );
+  });
 });
 
 export const handler: Handlers = {

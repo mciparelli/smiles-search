@@ -14,7 +14,7 @@ function getLink(flight) {
   const params = new URLSearchParams({
     originAirportCode: flight.origin,
     destinationAirportCode: flight.destination,
-    departureDate: flight.departureDate.getTime(),
+    departureDate: new Date(flight.departureDate).getTime(),
     adults: "1",
     infants: "0",
     children: "0",
@@ -25,18 +25,16 @@ function getLink(flight) {
 }
 
 function sortByMilesAndTaxes(flightList) {
-  return flightList.sort(
-    (a, b) => {
-      if (a.fare.miles === b.fare.miles) {
-        if (a.fare.money === b.fare.money) {
-          return a.fare.airlineTax - b.fare.airlineTax;
-        } else {
-          return a.fare.money - b.fare.money;
-        }
+  return flightList.sort((a, b) => {
+    if (a.fare.miles === b.fare.miles) {
+      if (a.fare.money === b.fare.money) {
+        return a.fare.airlineTax - b.fare.airlineTax;
+      } else {
+        return a.fare.money - b.fare.money;
       }
-      return a.fare.miles - b.fare.miles;
-    },
-  );
+    }
+    return a.fare.miles - b.fare.miles;
+  });
 }
 
 const cabinas = [
@@ -112,22 +110,34 @@ const escalas = [
   { id: 1, name: "Una o ninguna" },
   { id: 2, name: "Dos o menos" },
 ];
-const viajeFacil = [{ id: "", name: "Indistinto" }, {
-  id: "1",
-  name: "Sólo viaje fácil",
-}];
-const vuelosABrasil = [{ id: "false", name: "GOL" }, {
-  id: "true",
-  name: "Otras aerolíneas",
-}];
-const tarifas = [{ id: "", name: "Todas" }, {
-  id: "AWARD",
-  name: "Sólo Award",
-}];
-const canje = [{ id: fares.club, name: "Millas" }, {
-  id: fares.moneyClub,
-  name: "Smiles and Money",
-}];
+const viajeFacil = [
+  { id: "", name: "Indistinto" },
+  {
+    id: "1",
+    name: "Sólo viaje fácil",
+  },
+];
+const vuelosABrasil = [
+  { id: "false", name: "GOL" },
+  {
+    id: "true",
+    name: "Otras aerolíneas",
+  },
+];
+const tarifas = [
+  { id: "", name: "Todas" },
+  {
+    id: "AWARD",
+    name: "Sólo Award",
+  },
+];
+const canje = [
+  { id: fares.club, name: "Millas" },
+  {
+    id: fares.moneyClub,
+    name: "Smiles and Money",
+  },
+];
 
 const searchTypes = [
   { id: "airports", name: "Aeropuertos y ciudades" },
@@ -158,9 +168,11 @@ const filtros = {
 };
 
 function filterFlights({ allFlights, monthSearch, filters }) {
-  const airlineCodes = Object.entries(filters).filter(([key, _value]) =>
-    key.startsWith("airlines") && key.endsWith("[id]")
-  ).map(([_key, value]) => value);
+  const airlineCodes = Object.entries(filters)
+    .filter(
+      ([key, _value]) => key.startsWith("airlines") && key.endsWith("[id]"),
+    )
+    .map(([_key, value]) => value);
   const filterFunction = (someFlight) => {
     let cabinFilter = true,
       airlinesFilter = true,
@@ -211,9 +223,9 @@ function filterFlights({ allFlights, monthSearch, filters }) {
   };
   let filtered;
   if (monthSearch) {
-    filtered = allFlights.map((dayFlights) =>
-      dayFlights?.filter(filterFunction)?.[0]
-    ).filter(Boolean);
+    filtered = allFlights
+      .map((dayFlights) => dayFlights?.filter(filterFunction)?.[0])
+      .filter(Boolean);
   } else {
     filtered = allFlights.filter(filterFunction);
   }

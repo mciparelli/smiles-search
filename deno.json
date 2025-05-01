@@ -9,16 +9,10 @@
   },
   "lint": {
     "rules": {
-      "tags": [
-        "recommended"
-      ],
-      "exclude": [
-        "prefer-const"
-      ]
+      "tags": ["recommended"],
+      "exclude": ["prefer-const"]
     },
-    "exclude": [
-      "_fresh"
-    ]
+    "exclude": ["_fresh"]
   },
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.4.3/",
@@ -39,22 +33,19 @@
     "utils/": "./utils/",
     "api": "./utils/api.js",
     "islands/": "./islands/",
-    "p-throttle": "https://esm.sh/p-throttle"
+    "p-throttle": "https://esm.sh/p-throttle",
+    "playwright": "https://esm.sh/playwright@1.52.0"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "preact"
   },
   "fmt": {
-    "exclude": [
-      "_fresh"
-    ]
+    "exclude": ["_fresh"]
   },
   "deploy": {
     "project": "smiles-search",
-    "exclude": [
-      "**/node_modules"
-    ],
+    "exclude": ["**/node_modules"],
     "entrypoint": "main.ts"
   }
 }

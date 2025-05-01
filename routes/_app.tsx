@@ -14,8 +14,10 @@ export default function App({ Component }: AppProps) {
 
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.SMILES_SEARCH_URL = "${
-              Deno.env.get("SMILES_SEARCH_URL")
+            __html: `window.SEARCH_URL = "${
+              Deno.env.get(
+                "SEARCH_URL",
+              )
             }"; window.SMILES_TAX_URL = "${Deno.env.get("SMILES_TAX_URL")}";`,
           }}
         />
