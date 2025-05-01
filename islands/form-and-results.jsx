@@ -24,27 +24,34 @@ async function onSubmit(searchParams) {
   try {
     let shouldFetch = true,
       regionFrom = searchParams["region_from"]
-        ? regionsSignal.value.find((someRegion) =>
-          someRegion.name === searchParams["region_from"]
-        )
+        ? regionsSignal.value.find(
+            (someRegion) => someRegion.name === searchParams["region_from"],
+          )
         : null,
       regionTo = searchParams["region_to"]
-        ? regionsSignal.value.find((someRegion) =>
-          someRegion.name === searchParams["region_to"]
-        )
+        ? regionsSignal.value.find(
+            (someRegion) => someRegion.name === searchParams["region_to"],
+          )
         : null;
     if (searchParams["search_type[id]"] === "from-region-to-airport") {
-      shouldFetch = searchParams["region_from"] &&
-        searchParams.destinationAirportCode && regionFrom?.airports[0];
+      shouldFetch =
+        searchParams["region_from"] &&
+        searchParams.destinationAirportCode &&
+        regionFrom?.airports[0];
     } else if (searchParams["search_type[id]"] === "airports") {
-      shouldFetch = searchParams.originAirportCode &&
-        searchParams.destinationAirportCode;
+      shouldFetch =
+        searchParams.originAirportCode && searchParams.destinationAirportCode;
     } else if (searchParams["search_type[id]"] === "from-airport-to-region") {
-      shouldFetch = searchParams["region_to"] &&
-        searchParams.originAirportCode && regionTo?.airports[0];
+      shouldFetch =
+        searchParams["region_to"] &&
+        searchParams.originAirportCode &&
+        regionTo?.airports[0];
     } else {
-      shouldFetch = searchParams["region_to"] && regionTo?.airports[0] &&
-        searchParams["region_from"] && regionFrom?.airports[0];
+      shouldFetch =
+        searchParams["region_to"] &&
+        regionTo?.airports[0] &&
+        searchParams["region_from"] &&
+        regionFrom?.airports[0];
     }
     if (!shouldFetch) return null;
 
@@ -105,7 +112,8 @@ export default function FormAndResults({ params }) {
   const flights = requestsSignal.value.filtered;
   const isLoading = requestsSignal.value.status === "loading";
   const isMonthSearch = !params.departureDate;
-  const canjeId = requestsSignal.value.currentFilters?.["canje[id]"] ??
+  const canjeId =
+    requestsSignal.value.currentFilters?.["canje[id]"] ??
     filtros.defaults.canje.id;
   const canje = filtros.canje.find((someCanje) => someCanje.id === canjeId);
   return (
@@ -131,17 +139,17 @@ export default function FormAndResults({ params }) {
           }}
         />
       )}
-      {requestsSignal.value.status === "not initiated" &&
-        (
-          <p class="m-auto">
-            Elija un origen, un destino y una fecha para buscar.
-          </p>
-        )}
+      {requestsSignal.value.status === "not initiated" && (
+        <p class="m-auto">
+          Elija un origen, un destino y una fecha para buscar.
+        </p>
+      )}
       {isLoading && (
         <div class="m-auto flex flex-col items-center">
           <Spinner />
           <p class="my-4">
-            Buscando resultados {requestsSignal.value.message
+            Buscando resultados{" "}
+            {requestsSignal.value.message
               ? `(${requestsSignal.value.message})`
               : ""}
           </p>
@@ -149,48 +157,45 @@ export default function FormAndResults({ params }) {
       )}
       {Boolean(requestsSignal.value.error) &&
         requestsSignal.value.status === "finished" && (
-        <p class="m-auto">{requestsSignal.value.error}</p>
-      )}
+          <p class="m-auto">{requestsSignal.value.error}</p>
+        )}
       {(flights === null || flights?.length === 0) && (
         <p class="m-auto">No se encontraron vuelos para este tramo.</p>
       )}
-      {flights?.length > 0 && !isLoading &&
-        (
-          <div class="max-w-[100vw] overflow-x-auto border border-gray-900">
-            <table class="table-auto text-sm text-center min-w-[fit-content] w-full whitespace-nowrap">
-              <thead class="font-bold text-slate-400">
-                <tr>
-                  <th class="py-4 bg-blue-400 px-2">Tramo</th>
-                  <th class="bg-blue-400 px-2">Fecha y hora</th>
-                  <th class="bg-blue-400 px-2 lg:hidden">
-                    {canje.name} + Tasas
-                  </th>
-                  <th class="bg-blue-400 px-2">Aerolínea</th>
-                  <th class="bg-blue-400 px-2">Cabina</th>
-                  <th class="bg-blue-400 px-2">Escalas</th>
-                  <th class="bg-blue-400 px-2">Duración</th>
-                  <th class="bg-blue-400 px-2">Asientos</th>
-                  <th class="bg-blue-400 px-2 hidden lg:table-cell">
-                    {canje.name} + Tasas
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {flights.map((flight, i) => {
-                  const bgColor = i % 2 === 0 ? "bg-white" : "bg-blue-200";
-                  return (
-                    <Flight
-                      key={flight.uid}
-                      bgColor={bgColor}
-                      flight={flight}
-                      canje={canje}
-                    />
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        )}
+      {flights?.length > 0 && !isLoading && (
+        <div class="max-w-[100vw] overflow-x-auto border border-gray-900">
+          <table class="table-auto text-sm text-center min-w-[fit-content] w-full whitespace-nowrap">
+            <thead class="font-bold text-slate-400">
+              <tr>
+                <th class="py-4 bg-blue-400 px-2">Tramo</th>
+                <th class="bg-blue-400 px-2">Fecha y hora</th>
+                <th class="bg-blue-400 px-2 lg:hidden">{canje.name}</th>
+                <th class="bg-blue-400 px-2">Aerolínea</th>
+                <th class="bg-blue-400 px-2">Cabina</th>
+                <th class="bg-blue-400 px-2">Escalas</th>
+                <th class="bg-blue-400 px-2">Duración</th>
+                <th class="bg-blue-400 px-2">Asientos</th>
+                <th class="bg-blue-400 px-2 hidden lg:table-cell">
+                  {canje.name}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {flights.map((flight, i) => {
+                const bgColor = i % 2 === 0 ? "bg-white" : "bg-blue-200";
+                return (
+                  <Flight
+                    key={flight.uid}
+                    bgColor={bgColor}
+                    flight={flight}
+                    canje={canje}
+                  />
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,4 @@
-import useSWR from "swr";
 import { fares, filtros, getLink } from "utils/flight.js";
-import { getTax } from "utils/smiles-api.js";
 import { formatFlightDateLong, formatFlightDateShort } from "utils/dates.js";
 import Spinner from "components/spinner.jsx";
 
@@ -15,7 +13,6 @@ function Tax({ data, error, isLoading }) {
 }
 
 export default function Flight({ flight, canje, bgColor }) {
-  const taxInfo = useSWR({ flightUid: flight.uid, fare: flight.fare }, getTax);
   const milesDisplay = (
     <>
       {new Intl.NumberFormat("es-AR").format(flight.fare.miles)}
@@ -38,22 +35,20 @@ export default function Flight({ flight, canje, bgColor }) {
         {formatFlightDateLong(new Date(flight.departureDate))}
       </td>
       <td class={`${bgColor} px-2 lg:hidden`}>
-        <div class="inline-flex">
-          {milesDisplay} + <Tax {...taxInfo} />
-        </div>
+        <div class="inline-flex">{milesDisplay}</div>
       </td>
       <td class={`${bgColor} px-2`}>{flight.airline.name}</td>
       <td class={`${bgColor} px-2`}>
-        {filtros.cabinas.find((someCabina) => someCabina.id === flight.cabin)
-          .name}
+        {
+          filtros.cabinas.find((someCabina) => someCabina.id === flight.cabin)
+            .name
+        }
       </td>
       <td class={`${bgColor} px-2`}>{flight.stops || "Directo"}</td>
       <td class={`${bgColor} px-2`}>{flight.durationInHours}hs</td>
       <td class={`${bgColor} px-2`}>{flight.availableSeats}</td>
       <td class={`${bgColor} px-2 hidden lg:table-cell`}>
-        <div class="inline-flex">
-          {milesDisplay} + <Tax {...taxInfo} />
-        </div>
+        <div class="inline-flex">{milesDisplay}</div>
       </td>
     </tr>
   );
