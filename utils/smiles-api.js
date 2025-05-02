@@ -75,13 +75,15 @@ async function searchFlights(paramsObject) {
     window.SEARCH_URL + "/search?" + params.toString(),
     {
       signal: controller.signal,
+      headers: {
+        "ngrok-skip-browser-warning": "1",
+      },
     },
   );
   if (!response.ok) return null;
   requestsSignal.value = {
     ...requestsSignal.value,
-    message:
-      `${paramsObject.originAirportCode}-${paramsObject.destinationAirportCode} ${paramsObject.departureDate}`,
+    message: `${paramsObject.originAirportCode}-${paramsObject.destinationAirportCode} ${paramsObject.departureDate}`,
   };
   return response.json();
 }
