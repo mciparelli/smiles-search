@@ -70,7 +70,7 @@ async function searchFlights(paramsObject) {
   const controller = new AbortController();
   abortControllersSignal.value = [...abortControllersSignal.value, controller];
   const params = new URLSearchParams({ ...defaultParams, ...paramsObject });
-  params.set("departureDate", new Date(paramsObject.departureDate).getTime());
+  // params.set("departureDate", new Date(paramsObject.departureDate).getTime());
   const response = await fetch(
     window.SEARCH_URL + "/search?" + params.toString(),
     {
