@@ -59,7 +59,7 @@ async function getTax({ flightUid, fare }) {
     highlightText: fare.type,
   });
 
-  const response = await globalThis.fetch("/tax?" + params.toString());
+  const response = await fetch(window.SEARCH_URL + "/tax?" + params.toString());
   const {
     totals: { totalBoardingTax: tax },
   } = await response.json();
