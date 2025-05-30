@@ -37,17 +37,6 @@ const fetch = FetchRetry(globalThis.fetch, {
   },
 });
 
-const defaultParams = {
-  adults: "1",
-  children: "0",
-  infants: "0",
-  currencyCode: "ARS",
-  isFlexibleDateChecked: false,
-  r: "ar",
-  tripType: tripTypes.ONE_WAY,
-  cabinType: "all",
-  forceCongener: true,
-};
 async function getTax({ flightUid, fare }) {
   const params = new URLSearchParams({
     adults: "1",
@@ -69,10 +58,10 @@ async function getTax({ flightUid, fare }) {
 async function searchFlights(paramsObject) {
   const controller = new AbortController();
   abortControllersSignal.value = [...abortControllersSignal.value, controller];
-  const params = new URLSearchParams({ ...defaultParams, ...paramsObject });
+  const params = new URLSearchParams(paramsObject);
   // params.set("departureDate", new Date(paramsObject.departureDate).getTime());
   const response = await fetch(
-    window.SEARCH_URL + "/search?" + params.toString(),
+    window.SEARCH_URL + "/flights?" + params.toString(),
     {
       signal: controller.signal,
       headers: {
