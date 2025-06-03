@@ -1,6 +1,6 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "smiles-search-workers",
+	"name": "smiles-search",
 	"main": "src/index.tsx",
 	"compatibility_date": "2025-05-23",
 	"assets": {
