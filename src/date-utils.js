@@ -25,8 +25,4 @@ function formatFlightDateLong(flightDate) {
 	}).format(flightDate);
 }
 
-const minDate = new Date();
-const maxDate = new Date();
-maxDate.setDate(maxDate.getDate() + 329);
-
-export { formatDate, formatMonth, formatFlightDateShort, formatFlightDateLong, minDate, maxDate };
+export { formatDate, formatMonth, formatFlightDateShort, formatFlightDateLong };

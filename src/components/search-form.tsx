@@ -6,6 +6,9 @@ import { MonthSearchSelect } from './month-search-select';
 import { SearchType } from './search-type';
 
 function SearchForm() {
+	let maxDate = new Date();
+	maxDate.setDate(maxDate.getDate() + 329);
+
 	return (
 		<form
 			name="search"
@@ -87,8 +90,8 @@ function SearchForm() {
 						checked={true}
 					/>
 				</label>
-				<MonthSearchSelect show="$_isMonthSearch" />
-				<DateSearch show="!$_isMonthSearch" />
+				<MonthSearchSelect maxDate={maxDate} show="$_isMonthSearch" />
+				<DateSearch maxDate={maxDate} show="!$_isMonthSearch" />
 			</fieldset>
 			<fieldset class="flex flex-col md:flex-row gap-4 lg:gap-8">
 				<label class="label text-neutral">
