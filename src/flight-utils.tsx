@@ -213,20 +213,22 @@ async function streamResults({ c, stream }) {
 					forceCongener: body.onlyGol ? 'false' : 'true'
 				});
 				let request = new Request(reqUrl);
-
+				let promise = c.env.API.fetch(request).then((res) => {
+					stream.mergeFragments(<p class="my-4" id="results-message">Buscando resultados ({originAirportCode}-{destinationAirportCode} {departureDate})</p>.toString());
+					return res.json();
+				}).then(flights => flights.filter(someFlight => filterFlight({ someFlight, filters: body })));
+				if (body.date.length > 1) {
+					promise = promise.then((filteredFlights) => filteredFlights.sort(sortByMilesAndTaxes)[0]);
+				}
 				promises = [
 					...promises,
-					c.env.API.fetch(request).then((res) => {
-						stream.mergeFragments(<p class="my-4" id="results-message">Buscando resultados ({originAirportCode}-{destinationAirportCode} {departureDate})</p>.toString());
-						return res.json();
-					}),
+					promise,
 				];
 			}
 		}
 	}
-	let results = await Promise.all(promises).then(results => results.flat());
-	let filteredResults = results.filter(someFlight => filterFlight({ someFlight, filters: body }));
-	let sortedResults = filteredResults.sort(sortByMilesAndTaxes);
+	let results = await Promise.all(promises).then(results => results.flat().filter(Boolean));
+	let sortedResults = results.sort(sortByMilesAndTaxes);
 	let finalResults = sortedResults.slice(0, 10);
 	if (finalResults.length === 0) {
 		stream.mergeFragments(

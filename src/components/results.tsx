@@ -2,7 +2,7 @@ import Flight from './flight';
 
 export function Results({ flights }) {
 	return (
-		<div id="results-wrapper" class="overflow-x-auto border border-gray-900">
+		<div id="results-wrapper" class="overflow-x-auto border border-gray-900" data-scroll-into-view__smooth__vstart__hstart="">
 			<table class="table table-lg table-pin-cols text-center">
 				<thead>
 					<tr class="text-xl [&>th]:bg-primary/75 text-neutral">

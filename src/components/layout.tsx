@@ -7,8 +7,13 @@ function Layout({ children }) {
 			<head>
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+				<meta name="description" content="smiles-search.com es un sitio que te facilita las búsquedas para tus compras en smiles.com.ar" />
+				<meta name="keywords" content="smiles, smiles-search, compras, smiles.com.ar, búsqueda, millas, ofertas" />
+				<meta name="author" content="Martín Ciparelli" />
 				<title>Smiles Search</title>
 				<link rel="stylesheet" href="output.css" />
+				<link rel="icon" type="image/svg+xml" href="glass.svg" />
+
 				<script defer type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-beta.11/bundles/datastar.js" />
 				<script src="/client.js" />
 				{html`<script>
@@ -57,8 +62,16 @@ function Layout({ children }) {
 				</script>`}
 				<style>{html`.cloak { opacity: 0; transition-property: opacity; transition-duration: 300ms; }`}</style>
 			</head>
-			<body class="bg-base-100 h-full flex flex-col">
+			<body class="bg-base-100 h-full flex flex-col font-[Open_Sans]">
 				<div class="p-4 gap-4 flex flex-col flex-grow-[1] cloak" data-class="{cloak:false}">
+					<div class="flex gap-1">
+						<img src="glass.svg" alt="Smiles Search" class="w-18 self-start" />
+						<div class="font-[Montserrat] self-center">
+							<div class="text-lg/5 font-bold">smiles-</div>
+							<div class="text-lg/5 font-bold">search</div>
+							<div class="text-sm/5">.com</div>
+						</div>
+					</div>
 					{children}
 				</div>
 				<Footer />

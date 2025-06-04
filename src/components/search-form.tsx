@@ -63,7 +63,7 @@ function SearchForm() {
 						Hacia
 					</option>
 				</select>
-				<button
+				{/* <button
 					type="button"
 					class="px-2 switch-airports-or-regions"
 					data-on-click="switchAirportsOrRegions($_searchType)"
@@ -76,7 +76,7 @@ function SearchForm() {
 							clip-rule="evenodd"
 						/>
 					</svg>
-				</button>
+				</button> */}
 			</fieldset>
 			<fieldset class="flex flex-col md:flex-row gap-4 lg:gap-8">
 				<label class="label text-neutral">
@@ -116,7 +116,7 @@ function SearchForm() {
 					/>
 				</label> */}
 				<label class="label text-neutral">
-					Sólo vuelos de GOL
+					Sólo vuelos de GOL (Brasil)
 					<input
 						type="checkbox"
 						name="solo_gol"
