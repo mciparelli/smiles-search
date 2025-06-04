@@ -1,0 +1,15 @@
+<svg viewBox="0 0 680 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Magnifying glass circle -->
+  <circle cx="100" cy="130" r="80" fill="white" stroke="#4A90E2" stroke-width="16"/>
+
+  <!-- Smile inside magnifying glass -->
+  <path d="M 50 130 Q 100 180 150 130" stroke="#F5A623" stroke-width="12" fill="none" stroke-linecap="round"/>
+
+  <!-- Magnifying glass handle -->
+  <line x1="160" y1="190" x2="200" y2="230" stroke="#4A90E2" stroke-width="16" stroke-linecap="round"/>
+
+  <!-- Text with elegant typography -->
+  <text x="230" y="130" font-family="Montserrat, system-ui, -apple-system, sans-serif" font-size="80" font-weight="600" fill="#4A5568">smiles-</text>
+  <text x="230" y="190" font-family="Montserrat, system-ui, -apple-system, sans-serif" font-size="80" font-weight="600" fill="#4A5568">search</text>
+  <text x="230" y="240" font-family="Montserrat, system-ui, -apple-system, sans-serif" font-size="48" font-weight="400" fill="#4A5568">.com</text>
+</svg>

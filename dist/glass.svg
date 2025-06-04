@@ -1,0 +1,11 @@
+<svg viewBox="60 160 350 350" xmlns="http://www.w3.org/2000/svg">
+  <!-- Magnifying glass circle -->
+  <circle cx="200" cy="300" r="120" fill="white" stroke="#4A90E2" stroke-width="24"/>
+
+  <!-- Smile inside magnifying glass -->
+  <path d="M 130 300 Q 200 380 270 300" stroke="#F5A623" stroke-width="18" fill="none" stroke-linecap="round"/>
+
+  <!-- Magnifying glass handle -->
+  <line x1="290" y1="390" x2="360" y2="460" stroke="#4A90E2" stroke-width="24" stroke-linecap="round"/>
+
+</svg>
