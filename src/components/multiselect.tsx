@@ -14,7 +14,7 @@ export function Multiselect({ name, title, options, ...props }) {
 				{options.map((option, index) => (
 					<li key={index}>
 						<label class="label text-lg">
-							<input type="checkbox" class="checkbox" name={name} value={option.key} {...option.props} />
+							<input type="checkbox" class="checkbox text-primary" name={name} value={option.key} {...option.props} />
 							{option.value}
 						</label>
 					</li>

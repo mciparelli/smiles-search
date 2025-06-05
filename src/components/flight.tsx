@@ -14,12 +14,7 @@ function Tax({ data, error, isLoading }) {
 
 export default function Flight({ flight }) {
 	let taxInfo = {};
-	const milesDisplay = (
-		<>
-			{new Intl.NumberFormat('es-AR').format(flight.fare.miles)}
-			{false === fares.moneyClub && flight.fare.money && ` + $${Math.floor(flight.fare.money / 1000)}K`}
-		</>
-	);
+	const milesDisplay = new Intl.NumberFormat('es-AR').format(flight.fare.miles);
 	return (
 		<tr class="even:bg-base-200">
 			<td>
@@ -30,7 +25,7 @@ export default function Flight({ flight }) {
 			<td class="md:hidden">{formatFlightDateShort(new Date(flight.departureDate))}</td>
 			<td class="hidden md:table-cell">{formatFlightDateLong(new Date(flight.departureDate))}</td>
 			<td class="lg:hidden">
-				<div class="inline-flex">{milesDisplay} +</div>
+				<div class="inline-flex">{milesDisplay}</div>
 			</td>
 			<td>{flight.airline.name}</td>
 			<td>{filtros.cabinas.find((someCabina) => someCabina.id === flight.cabin).name}</td>

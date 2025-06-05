@@ -24,7 +24,7 @@ function generateMonths(maxDate) {
 }
 function MonthSearchSelect({ maxDate, show }: { maxDate: Date; show: string }) {
 	return (
-		<select aria-label="Mes" class="select select-lg" name="month" data-show={show} data-bind="_monthSearch">
+		<select aria-label="Mes" class="select select-lg w-52" name="month" data-show={show} data-bind="_monthSearch">
 			{generateMonths(maxDate).map((month) => (
 				<option key={month.id} value={month.id}>
 					{month.name}

@@ -7,7 +7,7 @@ const searchTypes = [
 
 function SearchType() {
 	return (
-		<select aria-label="Tipo de búsqueda" name="search_type" class="select select-lg w-[clamp(3rem,25rem,100%)]" data-bind="_searchType">
+		<select aria-label="Tipo de búsqueda" name="search_type" class="select select-lg w-[clamp(3rem,30rem,100%)]" data-bind="_searchType">
 			{searchTypes.map((someType) => (
 				<option key={someType.id} value={someType.id}>
 					Tipo de búsqueda: {someType.name}

@@ -3,5 +3,10 @@
 	themes:
 		dark --default,
 		light --preferslight,
-		corporate;
+		emerald;
+}
+.cloak {
+	opacity: 0;
+	transition-property: opacity;
+	transition-duration: 300ms;
 }

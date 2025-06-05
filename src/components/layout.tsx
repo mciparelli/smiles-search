@@ -1,9 +1,20 @@
 import { html } from 'hono/html';
 import { Footer } from './footer';
 
+function LoadLink({ href }) {
+	return (
+		<>
+			<link rel="preload" href={href} as="style" onload="this.onload=null;this.rel='stylesheet'" />
+			<noscript>
+				<link rel="stylesheet" href={href} />
+			</noscript>
+		</>
+	);
+}
+
 function Layout({ children }) {
 	return (
-		<html lang="en" class="h-full" data-theme="corporate">
+		<html lang="en" class="h-full" data-theme="emerald">
 			<head>
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,18 +22,14 @@ function Layout({ children }) {
 				<meta name="keywords" content="smiles, smiles-search, compras, smiles.com.ar, búsqueda, millas, ofertas" />
 				<meta name="author" content="Martín Ciparelli" />
 				<title>Smiles Search</title>
-				<link rel="stylesheet" href="output.css" />
-				<style>{html`.cloak { opacity: 0; transition-property: opacity; transition-duration: 300ms; }`}</style>
 				<link rel="preconnect" href="https://fonts.googleapis.com" />
 				<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-				<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet" />
-				<link
-					href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
-					rel="stylesheet"
-				/>
+				<LoadLink href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" />
+				<LoadLink href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" />
+				<link rel="stylesheet" href="output.css" />
 				<link rel="icon" type="image/svg+xml" href="glass.svg" />
+				<script defer src="/client.js" />
 				<script defer type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-beta.11/bundles/datastar.js" />
-				<script src="/client.js" />
 				{html`<script defer>
 					!(function (t, e) {
 						var o, n, p, r;
@@ -71,7 +78,7 @@ function Layout({ children }) {
 			<body class="bg-base-100 h-full flex flex-col font-[Open_Sans]" data-signals-request-controller="">
 				<div class="p-4 gap-4 flex flex-col flex-grow-[1] cloak" data-class="{cloak:false}">
 					<div class="flex gap-1">
-						<img src="glass.svg" alt="Smiles Search" class="w-18 self-start" />
+						<img src="glass.svg" alt="Smiles Search" class="w-18 h-18 self-start" />
 						<div class="font-[Montserrat] self-center">
 							<div class="text-lg/5 font-bold">smiles-</div>
 							<div class="text-lg/5 font-bold">search</div>

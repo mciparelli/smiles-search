@@ -2,7 +2,7 @@
 	"name": "smiles-search",
 	"scripts": {
 		"dev": "wrangler dev",
-		"build:css": "bunx @tailwindcss/cli -i ./src/input.css -o ./dist/output.css",
+		"build:css": "bunx @tailwindcss/cli -i ./src/input.css -o ./dist/output.css --minify",
 		"build": "bun run build:css",
 		"deploy": "wrangler deploy --minify",
 		"cf-typegen": "wrangler types --env-interface CloudflareBindings"

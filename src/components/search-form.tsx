@@ -144,7 +144,7 @@ function SearchForm() {
 						Filtros <span data-text="showTotalFiltersApplied({ airlines: $airline, escalas: $escalas, cabina: $cabina })" />
 					</span>
 				}
-				containerClass="border bg-base-200 text-base-content overflow-visible"
+				containerClass="z-1 border bg-base-200 text-base-content overflow-visible"
 				class="p-4 gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3"
 			>
 				<Filters />

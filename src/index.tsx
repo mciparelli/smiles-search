@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { html } from 'hono/html';
 import { validator } from 'hono/validator';
 import { serveStatic } from 'hono/cloudflare-workers';
 import { ServerSentEventGenerator } from '@starfederation/datastar-sdk/web';
@@ -46,15 +47,18 @@ app.post(
 
 app.get('/', (c) => {
 	return c.html(
-		<Layout>
-			<Collapsible title="Regiones" class="gap-2" containerClass="bg-accent text-accent-content font-bold">
-				<Region />
-			</Collapsible>
-			<SearchForm />
-			<div id="results-wrapper" class="m-auto flex flex-col items-center">
-				<p class="text-base-content font-medium">Elija un origen, un destino y una fecha para buscar.</p>
-			</div>
-		</Layout>,
+		html`<!doctype html>` +
+		(
+			<Layout>
+				<Collapsible title="Regiones" class="gap-2" containerClass="bg-primary text-primary-content font-bold">
+					<Region />
+				</Collapsible>
+				<SearchForm />
+				<div id="results-wrapper" class="m-auto flex flex-col items-center">
+					<p class="text-base-content font-medium">Elija un origen, un destino y una fecha para buscar.</p>
+				</div>
+			</Layout>
+		),
 	);
 });
 
