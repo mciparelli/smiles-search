@@ -172,6 +172,7 @@ function filterFlight({ someFlight, filters }) {
 		airlinesFilter = true,
 		stopsFilter = true,
 		tarifaFilter = true,
+		viajeFacilFilter = true,
 		canjeFilter = filters['smilesAndMoney'] ? someFlight.fare.type === fares.moneyClub : someFlight.fare.type === fares.club;
 	if (filters['cabina'] && filters['cabina'] !== filtros.defaults.cabina.id) {
 		cabinFilter = someFlight.cabin === filters['cabina'];
@@ -185,7 +186,10 @@ function filterFlight({ someFlight, filters }) {
 	if (filters['award']) {
 		tarifaFilter = someFlight.fareType === 'AWARD';
 	}
-	return [cabinFilter, airlinesFilter, stopsFilter, tarifaFilter, canjeFilter].every(Boolean);
+	if ('viajeFacil' in filters) {
+		viajeFacilFilter = someFlight.viajeFacil === filters['viajeFacil'];
+	}
+	return [cabinFilter, airlinesFilter, stopsFilter, tarifaFilter, canjeFilter, viajeFacilFilter].every(Boolean);
 }
 
 async function streamResults({ c, stream }) {

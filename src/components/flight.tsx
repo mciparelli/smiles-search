@@ -21,9 +21,9 @@ export default function Flight({ flight }) {
 		</>
 	);
 	return (
-		<tr class="even:bg-primary/25">
+		<tr class="even:bg-base-200">
 			<td>
-				<a class="text-blue-500" target="_blank" href={getLink(flight)}>
+				<a class="link link-primary font-medium" target="_blank" rel="noreferrer" href={getLink(flight)}>
 					{flight.origin}-{flight.destination}
 				</a>
 			</td>

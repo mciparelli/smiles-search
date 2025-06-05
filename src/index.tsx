@@ -47,12 +47,12 @@ app.post(
 app.get('/', (c) => {
 	return c.html(
 		<Layout>
-			<Collapsible title="Regiones" class="gap-2" containerClass="bg-primary text-primary-content">
+			<Collapsible title="Regiones" class="gap-2" containerClass="bg-accent text-accent-content font-bold">
 				<Region />
 			</Collapsible>
 			<SearchForm />
 			<div id="results-wrapper" class="m-auto flex flex-col items-center">
-				<p>Elija un origen, un destino y una fecha para buscar.</p>
+				<p class="text-base-content font-medium">Elija un origen, un destino y una fecha para buscar.</p>
 			</div>
 		</Layout>,
 	);

@@ -7,10 +7,12 @@ function Layout({ children }) {
 			<head>
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-				<meta name="description" content="smiles-search.com es un sitio que te facilita las búsquedas para tus compras en smiles.com.ar" />
+				<meta name="description" content="smiles-search.app es un sitio que te facilita las búsquedas para tus compras en smiles.com.ar" />
 				<meta name="keywords" content="smiles, smiles-search, compras, smiles.com.ar, búsqueda, millas, ofertas" />
 				<meta name="author" content="Martín Ciparelli" />
 				<title>Smiles Search</title>
+				<link rel="stylesheet" href="output.css" />
+				<style>{html`.cloak { opacity: 0; transition-property: opacity; transition-duration: 300ms; }`}</style>
 				<link rel="preconnect" href="https://fonts.googleapis.com" />
 				<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
 				<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet" />
@@ -18,12 +20,10 @@ function Layout({ children }) {
 					href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
 					rel="stylesheet"
 				/>
-				<link rel="stylesheet" href="output.css" />
 				<link rel="icon" type="image/svg+xml" href="glass.svg" />
-
 				<script defer type="module" src="https://cdn.jsdelivr.net/gh/starfederation/datastar@1.0.0-beta.11/bundles/datastar.js" />
 				<script src="/client.js" />
-				{html`<script>
+				{html`<script defer>
 					!(function (t, e) {
 						var o, n, p, r;
 						e.__SV ||
@@ -67,16 +67,15 @@ function Layout({ children }) {
 					})(document, window.posthog || []);
 					posthog.init('phc_RBB3bPLpJcDSIHYpo1JI4m8hmy1zXIVLvZLc0O3ZVpN', { api_host: 'https://app.posthog.com' });
 				</script>`}
-				<style>{html`.cloak { opacity: 0; transition-property: opacity; transition-duration: 300ms; }`}</style>
 			</head>
-			<body class="bg-base-100 h-full flex flex-col font-[Open_Sans]">
+			<body class="bg-base-100 h-full flex flex-col font-[Open_Sans]" data-signals-request-controller="">
 				<div class="p-4 gap-4 flex flex-col flex-grow-[1] cloak" data-class="{cloak:false}">
 					<div class="flex gap-1">
 						<img src="glass.svg" alt="Smiles Search" class="w-18 self-start" />
 						<div class="font-[Montserrat] self-center">
 							<div class="text-lg/5 font-bold">smiles-</div>
 							<div class="text-lg/5 font-bold">search</div>
-							<div class="text-sm/5">.com</div>
+							<div class="text-sm/5">.app</div>
 						</div>
 					</div>
 					{children}

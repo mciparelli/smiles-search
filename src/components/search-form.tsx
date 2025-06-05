@@ -13,13 +13,14 @@ function SearchForm() {
 		<form
 			name="search"
 			class="flex flex-col gap-4 items-start group"
-			data-on-submit="@post('/search')"
 			data-signals={`{airline: [], escalas: '${filtros.defaults.escalas.id}', cabina: '${filtros.defaults.cabina.id}' }`}
+			data-on-submit="if ($requestController) { $requestController.abort('Request in flight');} $requestController = new AbortController(); @post('/search', { abort: $requestController.signal })"
 		>
 			<SearchType />
 			<fieldset class="group flex gap-2 w-full items-baseline">
 				<select
 					class="select select-lg cloak"
+					aria-label="Region: desde"
 					name="region_from"
 					data-bind="_regionFrom"
 					data-show="['from-region-to-region', 'from-region-to-airport'].includes($_searchType)"
@@ -54,6 +55,7 @@ function SearchForm() {
 				/>
 				<select
 					class="select select-lg cloak"
+					aria-label="Region: hacia"
 					name="region_to"
 					data-bind="_regionTo"
 					data-attr-required="['from-airport-to-region', 'from-region-to-region'].includes($_searchType)"
@@ -79,12 +81,12 @@ function SearchForm() {
 				</button> */}
 			</fieldset>
 			<fieldset class="flex flex-col md:flex-row gap-4 lg:gap-8">
-				<label class="label text-neutral">
+				<label class="label text-base-content font-medium">
 					Búsqueda por mes
 					<input
 						type="checkbox"
 						name="is_month_search"
-						class="toggle toggle-xl checked:bg-primary checked:text-primary-content transition-opacity cloak"
+						class="toggle toggle-xl toggle-primary transition-opacity cloak"
 						data-class="{cloak:false}"
 						data-bind="_isMonthSearch"
 						checked={true}
@@ -94,12 +96,12 @@ function SearchForm() {
 				<DateSearch maxDate={maxDate} show="!$_isMonthSearch" />
 			</fieldset>
 			<fieldset class="flex flex-col md:flex-row gap-4 lg:gap-8">
-				<label class="label text-neutral">
+				<label class="label text-base-content font-medium">
 					Sólo vuelos award
 					<input
 						type="checkbox"
 						name="award"
-						class="toggle toggle-xl checked:bg-primary checked:text-primary-content transition-opacity cloak"
+						class="toggle toggle-xl toggle-primary transition-opacity cloak"
 						data-class="{cloak:false}"
 						data-bind="award"
 						checked={true}
@@ -115,12 +117,12 @@ function SearchForm() {
 						data-bind="smilesAndMoney"
 					/>
 				</label> */}
-				<label class="label text-neutral">
+				<label class="label text-base-content font-medium">
 					Sólo vuelos de GOL (Brasil)
 					<input
 						type="checkbox"
 						name="solo_gol"
-						class="toggle toggle-xl checked:bg-primary checked:text-primary-content transition-opacity cloak"
+						class="toggle toggle-xl toggle-primary transition-opacity cloak"
 						data-class="{cloak:false}"
 						data-bind="onlyGol"
 					/>
@@ -142,14 +144,14 @@ function SearchForm() {
 						Filtros <span data-text="showTotalFiltersApplied({ airlines: $airline, escalas: $escalas, cabina: $cabina })" />
 					</span>
 				}
-				containerClass="border bg-primary/25 text-neutral overflow-visible"
+				containerClass="border bg-base-200 text-base-content overflow-visible"
 				class="p-4 gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-3"
 			>
 				<Filters />
 			</Collapsible>
 			<button
 				type="submit"
-				class="btn btn-primary btn-lg"
+				class="btn btn-primary btn-lg text-primary-content group-invalid:opacity-50 group-invalid:cursor-not-allowed"
 				data-computed-origin="computeOrigin({ originAirport: $_originAirportCode, originRegion: $_regionFrom, searchType: $_searchType })"
 				data-computed-destination="computeDestination({ destinationAirport: $_destinationAirportCode, destinationRegion: $_regionTo, searchType: $_searchType })"
 				data-computed-date="computeDate({ dateSearch: $_dateSearch, monthSearch: $_monthSearch, isMonthSearch: $_isMonthSearch })"

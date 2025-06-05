@@ -15,14 +15,14 @@ export function Filters() {
 					},
 				}))}
 			/>
-			<select class="select select-lg w-full" name="escalas" data-bind="escalas">
+			<select aria-label="Escalas" class="select select-lg w-full" name="escalas" data-bind="escalas">
 				{filtros.escalas.map((escala) => (
 					<option key={escala.id} value={escala.id}>
 						Escalas: {escala.name}
 					</option>
 				))}
 			</select>
-			<select class="select select-lg w-full" name="cabina" data-bind="cabina">
+			<select aria-label="Cabinas" class="select select-lg w-full" name="cabina" data-bind="cabina">
 				{filtros.cabinas.map((cabina) => (
 					<option key={cabina.id} value={cabina.id}>
 						Cabina: {cabina.name}
