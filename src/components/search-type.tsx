@@ -2,7 +2,7 @@ const searchTypes = [
 	{ id: 'airports', name: 'Aeropuertos y ciudades' },
 	{ id: 'from-airport-to-region', name: 'De aeropuerto a región' },
 	{ id: 'from-region-to-airport', name: 'De región a aeropuerto' },
-	{ id: 'from-region-to-region', name: 'De región a región' },
+	// { id: 'from-region-to-region', name: 'De región a región' },
 ];
 
 function SearchType() {
