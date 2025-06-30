@@ -75,7 +75,7 @@ function Layout({ children }) {
 					posthog.init('phc_RBB3bPLpJcDSIHYpo1JI4m8hmy1zXIVLvZLc0O3ZVpN', { api_host: 'https://app.posthog.com' });
 				</script>`}
 			</head>
-			<body class="bg-base-100 h-full flex flex-col font-[Open_Sans]" data-signals-request-controller="">
+			<body class="bg-base-100 h-full flex flex-col font-[Open_Sans]">
 				<div class="p-4 gap-4 flex flex-col flex-grow-[1] cloak" data-class="{cloak:false}">
 					<div class="flex gap-1">
 						<img src="glass.svg" alt="Smiles Search" class="w-18 h-18 self-start" />

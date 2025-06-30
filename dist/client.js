@@ -66,6 +66,15 @@ function updateRegionsSelectOptions() {
 	}
 }
 
+function switchAirports() {
+	let originEl = document.querySelector('[name=originAirportCode]');
+	let destinationEl = document.querySelector('[name=destinationAirportCode]');
+	let origin = originEl.value;
+	originEl.value = destinationEl.value;
+	destinationEl.value = origin;
+	originEl.focus();
+}
+
 // needed because regions are populated by JS script
 function selectStorageRegions() {
 	let dataStarData = localStorage.getItem('datastar');
@@ -92,9 +101,7 @@ document.addEventListener('input', function (event) {
 	}
 });
 
-/* save to storage */
-document.addEventListener('change', function (ev) {
-	if (!event.target.closest('form.region')) return;
+function saveRegionsToStorage() {
 	let regionForms = document.querySelectorAll('form.region');
 	let i = 1;
 	let jsonToStore = {};
@@ -107,6 +114,47 @@ document.addEventListener('change', function (ev) {
 	}
 	localStorage.setItem('regions', JSON.stringify(jsonToStore));
 	updateRegionsSelectOptions();
+}
+
+/* save to storage */
+document.addEventListener('change', function (event) {
+	if (event.target.closest('form.region')) {
+		saveRegionsToStorage();
+	} else if (event.target.matches('[name=search_type]')) {
+		if (event.target.value === 'from-airport-to-region') {
+			let originEl = document.querySelector('[name=originAirportCode]');
+			let destinationEl = document.querySelector('[name=region_to]');
+			let destinationAirport = document.querySelector('[name=destinationAirportCode]').value;
+			if (destinationAirport) {
+				originEl.value = destinationAirport;
+				originEl.dispatchEvent(new CustomEvent('change'));
+				document.querySelector('[name=destinationAirportCode]').value = '';
+			}
+			let originRegion = document.querySelector('[name=region_from]').value;
+			if (originRegion) {
+				destinationEl.value = originRegion;
+				destinationEl.dispatchEvent(new CustomEvent('change'));
+				document.querySelector('[name=region_from]').value = '';
+			}
+			originEl.focus();
+		} else if (event.target.value === 'from-region-to-airport') {
+			let originEl = document.querySelector('[name=region_from]');
+			let destinationEl = document.querySelector('[name=destinationAirportCode]');
+			let destinationRegion = document.querySelector('[name=region_to]').value;
+			if (destinationRegion) {
+				originEl.value = destinationRegion;
+				originEl.dispatchEvent(new CustomEvent('change'));
+				document.querySelector('[name=region_to]').value = '';
+			}
+			let originAirport = document.querySelector('[name=originAirportCode]').value;
+			if (originAirport) {
+				destinationEl.value = originAirport;
+				destinationEl.dispatchEvent(new CustomEvent('change'));
+				document.querySelector('[name=originAirportCode]').value = '';
+			}
+			originEl.focus();
+		}
+	}
 });
 /* restore from storage on page load */
 window.addEventListener('load', function () {

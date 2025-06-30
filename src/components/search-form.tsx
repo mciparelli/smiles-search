@@ -13,8 +13,8 @@ function SearchForm() {
 		<form
 			name="search"
 			class="flex flex-col gap-4 items-start group"
-			data-signals={`{airline: [], escalas: '${filtros.defaults.escalas.id}', cabina: '${filtros.defaults.cabina.id}' }`}
-			data-on-submit="if ($requestController) { $requestController.abort('Request in flight');} $requestController = new AbortController(); @post('/search', { abort: $requestController.signal })"
+			data-signals={`{_requestController: '', airline: [], escalas: '${filtros.defaults.escalas.id}', cabina: '${filtros.defaults.cabina.id}' }`}
+			data-on-submit="if ($_requestController) { $_requestController.abort('Request in flight');} $_requestController = new AbortController(); @post('/search', { abort: $_requestController.signal })"
 		>
 			<SearchType />
 			<fieldset class="group flex gap-2 w-full items-baseline">
@@ -65,11 +65,11 @@ function SearchForm() {
 						Hacia
 					</option>
 				</select>
-				{/* <button
+				<button
 					type="button"
 					class="px-2 switch-airports-or-regions"
-					data-on-click="switchAirportsOrRegions($_searchType)"
-					data-show="['airports', 'from-region-to-region'].includes($_searchType)"
+					data-on-click="switchAirports()"
+					data-show="$_searchType === 'airports'"
 				>
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="h-5 w-5">
 						<path
@@ -78,7 +78,7 @@ function SearchForm() {
 							clip-rule="evenodd"
 						/>
 					</svg>
-				</button> */}
+				</button>
 			</fieldset>
 			<fieldset class="flex flex-col md:flex-row gap-4 lg:gap-8">
 				<label class="label text-base-content font-medium">
@@ -149,13 +149,19 @@ function SearchForm() {
 			>
 				<Filters />
 			</Collapsible>
+			<fieldset class="flex flex-col md:flex-row gap-4 lg:gap-8">
+				<label class="label text-base-content font-medium">
+					Resultados
+					<input type="number" name="qty" class="input input-lg" min={1} max={100} value={10} data-bind="qty" />
+				</label>
+			</fieldset>
 			<button
 				type="submit"
 				class="btn btn-primary btn-lg text-primary-content group-invalid:opacity-50 group-invalid:cursor-not-allowed"
 				data-computed-origin="computeOrigin({ originAirport: $_originAirportCode, originRegion: $_regionFrom, searchType: $_searchType })"
 				data-computed-destination="computeDestination({ destinationAirport: $_destinationAirportCode, destinationRegion: $_regionTo, searchType: $_searchType })"
 				data-computed-date="computeDate({ dateSearch: $_dateSearch, monthSearch: $_monthSearch, isMonthSearch: $_isMonthSearch })"
-				data-persist="_dateSearch _monthSearch _isMonthSearch _searchType _regionFrom _regionTo _originAirportCode _destinationAirportCode escalas viajeFacil award onlyGol smilesAndMoney"
+				data-persist="_dateSearch _monthSearch _isMonthSearch _searchType _regionFrom _regionTo _originAirportCode _destinationAirportCode escalas viajeFacil award onlyGol smilesAndMoney qty"
 			>
 				Buscar
 			</button>

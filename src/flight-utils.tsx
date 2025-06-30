@@ -219,8 +219,9 @@ async function streamResults({ c, stream }) {
 				let request = new Request(reqUrl);
 				let promise = c.env.API.fetch(request).then((res) => {
 					stream.mergeFragments(<p class="my-4" id="results-message">Buscando resultados ({originAirportCode}-{destinationAirportCode} {departureDate})</p>.toString());
+					if (!res.ok) return []
 					return res.json();
-				}).then(flights => flights.filter(someFlight => filterFlight({ someFlight, filters: body })));
+				}).then(flights => flights.filter(someFlight => filterFlight({ someFlight, filters: body }))).catch(err => []);
 				if (body.date.length > 1) {
 					promise = promise.then((filteredFlights) => filteredFlights.sort(sortByMilesAndTaxes)[0]);
 				}
@@ -233,7 +234,7 @@ async function streamResults({ c, stream }) {
 	}
 	let results = await Promise.all(promises).then(results => results.flat().filter(Boolean));
 	let sortedResults = results.sort(sortByMilesAndTaxes);
-	let finalResults = sortedResults.slice(0, 10);
+	let finalResults = sortedResults.slice(0, body.qty);
 	if (finalResults.length === 0) {
 		stream.mergeFragments(
 			<div id="results-wrapper" class="m-auto flex flex-col items-center">
