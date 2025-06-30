@@ -52,7 +52,7 @@ function populateDefaultRegions() {
 function updateRegionsSelectOptions() {
 	let allRegions = Object.values(JSON.parse(localStorage.getItem('regions')));
 	let regions = allRegions.filter(isRegionValid);
-	let regionNames = regions.map((region) => region.region_name);
+	let regionNames = regions.map((region) => region.region_name).sort();
 	let regionsSelect = document.querySelectorAll('[name=region_from],[name=region_to]');
 	for (const regionSelect of regionsSelect.values()) {
 		let desdeOrHacia = regionSelect.name === 'region_to' ? 'Hacia' : 'Desde';
