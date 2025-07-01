@@ -243,7 +243,7 @@ async function streamResults({ c, stream }) {
 				</p>
 			</div>.toString());
 	} else {
-		stream.mergeFragments(<Results flights={finalResults} />.toString());
+		stream.mergeFragments(<Results showMilesAndMoney={body.smilesAndMoney} flights={finalResults} />.toString());
 	}
 }
 

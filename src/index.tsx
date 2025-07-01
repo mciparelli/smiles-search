@@ -8,6 +8,7 @@ import { Region } from '@components/region';
 import { SearchForm } from '@components/search-form';
 import { streamResults } from './flight-utils';
 import { Collapsible } from '@components/collapsible';
+import { cache } from 'hono/cache';
 
 const app = new Hono<{ Bindings: CloudflareBindings }>();
 
@@ -16,6 +17,37 @@ app.get('/static/*', serveStatic({ root: './' }));
 
 // Serve CSS files directly from public directory
 app.get('/output.css', serveStatic({ path: './public/output.css' }));
+
+app.get(
+	'/tax',
+	// cache({
+	// 	cacheName: 'search',
+	// 	cacheControl: 'max-age=3600, stale-while-revalidate=86400, stale-if-error=604800', // max-age=3600 is 1 hour, stale-while-revalidate=86400 is 24 hours, stale-if-error=604800 is 7 days
+	// }),
+	(c) => {
+		return ServerSentEventGenerator.stream(
+			async (stream) => {
+				let params = { uid: c.req.query('uid'), fareuid: c.req.query('fareuid') };
+				let taxData = await c.env.API.searchTax(params);
+				if (taxData.errorMessage) {
+					stream.mergeFragments(`<div id="tax-${params.uid}-${params.fareuid}">?</div>`);
+				} else {
+					let {
+						totals: {
+							totalBoardingTax: { money: moneyTax },
+						},
+					} = taxData;
+					stream.mergeFragments(`<div id="tax-${params.uid}-${params.fareuid}">$${Math.floor(moneyTax / 1000)}K</div>`);
+				}
+			},
+			{
+				onError(error) {
+					console.error(error);
+				},
+			},
+		);
+	},
+);
 
 app.post(
 	'/search',

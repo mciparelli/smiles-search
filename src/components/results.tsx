@@ -1,6 +1,6 @@
 import Flight from './flight';
 
-export function Results({ flights }) {
+export function Results({ flights, showMilesAndMoney }) {
 	return (
 		<div id="results-wrapper" class="overflow-x-auto border border-gray-900" data-scroll-into-view__smooth__vstart__hstart="">
 			<table class="table table-lg table-pin-cols text-center">
@@ -14,12 +14,12 @@ export function Results({ flights }) {
 						<th>Escalas</th>
 						<th>Duración</th>
 						<th>Asientos</th>
-						<th class="hidden lg:table-cell">Millas</th>
+						<th class="hidden lg:table-cell">Millas + Tasas</th>
 					</tr>
 				</thead>
 				<tbody>
 					{flights.map((flight, i) => {
-						return <Flight key={flight.uid} flight={flight} />;
+						return <Flight key={flight.uid} showMilesAndMoney={showMilesAndMoney} flight={flight} />;
 					})}
 				</tbody>
 			</table>

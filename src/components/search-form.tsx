@@ -107,16 +107,6 @@ function SearchForm() {
 						checked={true}
 					/>
 				</label>
-				{/* <label class="label text-neutral">
-					Smiles & Money
-					<input
-						type="checkbox"
-						name="smiles_and_money"
-						class="toggle toggle-xl checked:bg-primary checked:text-primary-content transition-opacity cloak"
-						data-class="{cloak:false}"
-						data-bind="smilesAndMoney"
-					/>
-				</label> */}
 				<label class="label text-base-content font-medium">
 					Sólo vuelos de GOL (Brasil)
 					<input
@@ -125,6 +115,16 @@ function SearchForm() {
 						class="toggle toggle-xl toggle-primary transition-opacity cloak"
 						data-class="{cloak:false}"
 						data-bind="onlyGol"
+					/>
+				</label>
+				<label class="label text-neutral">
+					Smiles & Money
+					<input
+						type="checkbox"
+						name="smiles_and_money"
+						class="toggle toggle-xl checked:bg-primary checked:text-primary-content transition-opacity cloak"
+						data-class="{cloak:false}"
+						data-bind="smilesAndMoney"
 					/>
 				</label>
 				{/* <label class="label text-neutral">

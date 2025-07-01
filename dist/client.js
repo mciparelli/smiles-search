@@ -191,6 +191,7 @@ window.addEventListener('load', function () {
 });
 
 const minDate = new Date();
+minDate.setHours(0, 0, 0, 0);
 const maxDate = new Date();
 maxDate.setDate(maxDate.getDate() + 329);
 

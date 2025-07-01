@@ -10,7 +10,7 @@ export function Multiselect({ name, title, options, ...props }) {
 				padding-inline-start: calc(0.25rem * 4);
     		padding-inline-end: calc(0.25rem * 7);"
 			/>
-			<ul class="menu bg-base-100 shadow-sm absolute left-0 top-full w-full z-50 opacity-0 invisible peer-checked:opacity-100 peer-checked:visible transform -translate-y-1 peer-checked:translate-y-0 transition-all duration-200 rounded-b-md rounded-t-none border-t-0">
+			<ul class="menu bg-base-100 shadow-sm absolute left-0 top-full w-full z-50 opacity-0 invisible peer-checked:opacity-100 peer-checked:visible transform -translate-y-1 peer-checked:translate-y-0 transition-all duration-200 rounded-b-md rounded-t-none border-t-0 flex flex-col max-h-60 flex-nowrap overflow-y-scroll">
 				{options.map((option, index) => (
 					<li key={index}>
 						<label class="label text-lg">

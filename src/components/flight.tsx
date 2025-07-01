@@ -1,22 +1,11 @@
 import { Spinner } from './spinner.jsx';
-import { fares, filtros, getLink } from '../flight-utils.js';
+import { filtros, getLink } from '../flight-utils.js';
 import { formatFlightDateLong, formatFlightDateShort } from '../date-utils.js';
 
-function Tax({ data, error, isLoading }) {
-	return (
-		<>
-			{isLoading && <Spinner />}
-			{data && `$${Math.floor(data.money / 1000)}K`}
-			{!isLoading && !data && error && '?'}
-		</>
-	);
-}
-
-export default function Flight({ flight }) {
-	let taxInfo = {};
+export default function Flight({ flight, showMilesAndMoney }) {
 	const milesDisplay = new Intl.NumberFormat('es-AR').format(flight.fare.miles);
 	return (
-		<tr class="even:bg-base-200">
+		<tr class="even:bg-base-200" data-on-load={`@get('/tax?uid=${flight.uid}&fareuid=${flight.fare.uid}')`}>
 			<td>
 				<a class="link link-primary font-medium" target="_blank" rel="noreferrer" href={getLink(flight)}>
 					{flight.origin}-{flight.destination}
@@ -28,12 +17,21 @@ export default function Flight({ flight }) {
 				<div class="inline-flex">{milesDisplay}</div>
 			</td>
 			<td>{flight.airline.name}</td>
-			<td>{filtros.cabinas.find((someCabina) => someCabina.id === flight.cabin).name}</td>
+			<td>{filtros.cabinas.find((someCabina) => someCabina.id === flight.cabin)?.name}</td>
 			<td>{flight.stops || 'Directo'}</td>
 			<td>{flight.durationInHours}hs</td>
 			<td>{flight.availableSeats}</td>
 			<td class="hidden lg:table-cell">
-				<div class="inline-flex">{milesDisplay}</div>
+				<div class="flex gap-2 justify-center">
+					<span id={`miles-${flight.uid}-${flight.fare.uid}`}>{milesDisplay}</span>
+					{showMilesAndMoney && (
+						<span id={`miles-and-money-${flight.uid}-${flight.fare.uid}`}>+ ${Math.floor(flight.fare.money / 1000)}K</span>
+					)}
+					+
+					<div id={`tax-${flight.uid}-${flight.fare.uid}`}>
+						<Spinner />
+					</div>
+				</div>
 			</td>
 		</tr>
 	);
