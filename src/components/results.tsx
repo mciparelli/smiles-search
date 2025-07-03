@@ -14,7 +14,7 @@ export function Results({ flights, showMilesAndMoney }) {
 						<th>Escalas</th>
 						<th>Duración</th>
 						<th>Asientos</th>
-						<th class="hidden lg:table-cell">Millas + Tasas</th>
+						<th class="hidden lg:table-cell">{showMilesAndMoney ? 'Millas + Money + Tasas' : 'Millas + Tasas'}</th>
 					</tr>
 				</thead>
 				<tbody>

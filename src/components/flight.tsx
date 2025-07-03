@@ -25,7 +25,9 @@ export default function Flight({ flight, showMilesAndMoney }) {
 				<div class="flex gap-2 justify-center">
 					<span id={`miles-${flight.uid}-${flight.fare.uid}`}>{milesDisplay}</span>
 					{showMilesAndMoney && (
-						<span id={`miles-and-money-${flight.uid}-${flight.fare.uid}`}>+ ${Math.floor(flight.fare.money / 1000)}K</span>
+						<>
+							+<span id={`miles-and-money-${flight.uid}-${flight.fare.uid}`}>${Math.floor(flight.fare.money / 1000)}K</span>
+						</>
 					)}
 					+
 					<div id={`tax-${flight.uid}-${flight.fare.uid}`}>
