@@ -14,7 +14,7 @@ function SearchForm() {
 			name="search"
 			class="flex flex-col gap-4 items-start group"
 			data-signals={`{_requestController: '', airline: [], escalas: '${filtros.defaults.escalas.id}', cabina: '${filtros.defaults.cabina.id}' }`}
-			data-on-submit="if ($_requestController) { $_requestController.abort('Request in flight');} $_requestController = new AbortController(); @post('/search', { abort: $_requestController.signal })"
+			data-on-submit="if ($_requestController) { $_requestController.abort('Request in flight');} $_requestController = new AbortController(); @post('/search', { abort: $_requestController.signal, openWhenHidden: true })"
 		>
 			<SearchType />
 			<fieldset class="group flex gap-2 w-full items-baseline">
