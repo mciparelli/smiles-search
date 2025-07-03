@@ -156,6 +156,12 @@ document.addEventListener('change', function (event) {
 		}
 	}
 });
+
+const minDate = new Date();
+minDate.setHours(0, 0, 0, 0);
+const maxDate = new Date();
+maxDate.setDate(maxDate.getDate() + 329);
+
 /* restore from storage on page load */
 window.addEventListener('load', function () {
 	try {
@@ -180,20 +186,19 @@ window.addEventListener('load', function () {
 		if (hasRegionsStored) {
 			form.remove();
 		}
-		updateRegionsSelectOptions();
-		selectStorageRegions();
-		handleDestinationFocus();
-		document.querySelector('[name=region_from]').classList.remove('cloak');
-		document.querySelector('[name=region_to]').classList.remove('cloak');
 	} catch (err) {
 		populateDefaultRegions();
 	}
+	let currentDate = new Date(document.querySelector('[name=departureDate]').value);
+	if (currentDate < minDate) {
+		document.querySelector('[name=departureDate]').value = minDate.toISOString().split('T')[0];
+	}
+	updateRegionsSelectOptions();
+	selectStorageRegions();
+	handleDestinationFocus();
+	document.querySelector('[name=region_from]').classList.remove('cloak');
+	document.querySelector('[name=region_to]').classList.remove('cloak');
 });
-
-const minDate = new Date();
-minDate.setHours(0, 0, 0, 0);
-const maxDate = new Date();
-maxDate.setDate(maxDate.getDate() + 329);
 
 function findDatesInMonth(monthString) {
 	let [year, month] = monthString.split('-').map(Number);
