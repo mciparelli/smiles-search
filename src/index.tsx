@@ -20,10 +20,10 @@ app.get('/output.css', serveStatic({ path: './public/output.css' }));
 
 app.get(
 	'/tax',
-	// cache({
-	// 	cacheName: 'search',
-	// 	cacheControl: 'max-age=3600, stale-while-revalidate=86400, stale-if-error=604800', // max-age=3600 is 1 hour, stale-while-revalidate=86400 is 24 hours, stale-if-error=604800 is 7 days
-	// }),
+	cache({
+		cacheName: 'search',
+		cacheControl: 'max-age=3600, stale-while-revalidate=86400, stale-if-error=604800', // max-age=3600 is 1 hour, stale-while-revalidate=86400 is 24 hours, stale-if-error=604800 is 7 days
+	}),
 	(c) => {
 		return ServerSentEventGenerator.stream(
 			async (stream) => {
