@@ -101,6 +101,29 @@ document.addEventListener('input', function (event) {
 	}
 });
 
+function allRegionsPopulated() {
+	let regionForms = document.querySelectorAll('form.region');
+	for (let form of regionForms) {
+		if (!form.querySelector('[name=region_name]').value) {
+			return false;
+		}
+	}
+	return true;
+}
+
+function addNewRegion() {
+	let regionsCount = document.querySelectorAll('form.region').length;
+	console.log(regionsCount);
+	let newEl = document.createElement('form');
+	newEl.name = `region${regionsCount + 1}`;
+	newEl.className = 'region grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 px-2 text-accent-content';
+	newEl.innerHTML = `
+		<input type="text" name="region_name" pattern="[a-zA-Z0-9_\-]{3,20}" placeholder="Region" class="input input-bordered text-primary">
+		<input type="text" name="airport_name" pattern="[A-Z]{3}" placeholder="Aeropuerto 1" class="input input-bordered text-primary" maxlength="3"><input type="text" name="airport_name" pattern="[A-Z]{3}" placeholder="Aeropuerto 2" class="input input-bordered text-primary" maxlength="3"><input type="text" name="airport_name" pattern="[A-Z]{3}" placeholder="Aeropuerto 3" class="input input-bordered text-primary" maxlength="3"><input type="text" name="airport_name" pattern="[A-Z]{3}" placeholder="Aeropuerto 4" class="input input-bordered text-primary" maxlength="3"><input type="text" name="airport_name" pattern="[A-Z]{3}" placeholder="Aeropuerto 5" class="input input-bordered text-primary" maxlength="3"><input type="text" name="airport_name" pattern="[A-Z]{3}" placeholder="Aeropuerto 6" class="input input-bordered text-primary" maxlength="3"><input type="text" name="airport_name" pattern="[A-Z]{3}" placeholder="Aeropuerto 7" class="input input-bordered text-primary" maxlength="3"><input type="text" name="airport_name" pattern="[A-Z]{3}" placeholder="Aeropuerto 8" class="input input-bordered text-primary" maxlength="3"><input type="text" name="airport_name" pattern="[A-Z]{3}" placeholder="Aeropuerto 9" class="input input-bordered text-primary" maxlength="3"><input type="text" name="airport_name" pattern="[A-Z]{3}" placeholder="Aeropuerto 10" class="input input-bordered text-primary" maxlength="3">
+	`;
+	document.querySelector('.region:last-child').after(newEl);
+}
+
 function saveRegionsToStorage() {
 	let regionForms = document.querySelectorAll('form.region');
 	let i = 1;
@@ -120,6 +143,9 @@ function saveRegionsToStorage() {
 document.addEventListener('change', function (event) {
 	if (event.target.closest('form.region')) {
 		saveRegionsToStorage();
+		if (allRegionsPopulated()) {
+			addNewRegion();
+		}
 	} else if (event.target.matches('[name=search_type]')) {
 		if (event.target.value === 'from-airport-to-region') {
 			let originEl = document.querySelector('[name=originAirportCode]');
@@ -162,37 +188,45 @@ minDate.setHours(0, 0, 0, 0);
 const maxDate = new Date();
 maxDate.setDate(maxDate.getDate() + 329);
 
-/* restore from storage on page load */
-window.addEventListener('load', function () {
+function findOrPopulateRegions() {
 	try {
-		let regions = JSON.parse(localStorage.getItem('regions') ?? {});
+		let regions = JSON.parse(localStorage.getItem('regions') ?? '{}');
 		let hasRegionsStored = regions && isRegionValid(Object.values(regions)[0]);
 		if (!hasRegionsStored) {
 			populateDefaultRegions();
-			regions = JSON.parse(localStorage.getItem('regions') ?? {});
+			regions = JSON.parse(localStorage.getItem('regions') ?? '{}');
 		}
-		let form = document.querySelector('form.region');
-		let i = 1;
-		for (let region in regions) {
-			let regionData = regions[region];
-			let newEl = form.cloneNode(true);
-			newEl.name = 'region' + i++;
-			newEl.elements.region_name.value = regionData.region_name;
-			for (let j = 0; j < 10; j++) {
-				newEl.elements.airport_name[j].value = regionData.airports[j] ?? '';
-			}
-			form.insertAdjacentElement('beforebegin', newEl);
-		}
-		if (hasRegionsStored) {
-			form.remove();
-		}
+		return regions;
 	} catch (err) {
 		populateDefaultRegions();
+		return findOrPopulateRegions();
 	}
+}
+
+function fixDepartureDate() {
 	let currentDate = new Date(document.querySelector('[name=departureDate]').value);
 	if (currentDate < minDate) {
 		document.querySelector('[name=departureDate]').value = minDate.toISOString().split('T')[0];
 	}
+}
+
+/* restore from storage on page load */
+window.addEventListener('load', function () {
+	let regions = findOrPopulateRegions();
+	let form = document.querySelector('form.region');
+	let i = 1;
+	for (let region in regions) {
+		let regionData = regions[region];
+		let newEl = form.cloneNode(true);
+		newEl.name = 'region' + i++;
+		newEl.elements.region_name.value = regionData.region_name;
+		for (let j = 0; j < 10; j++) {
+			newEl.elements.airport_name[j].value = regionData.airports[j] ?? '';
+		}
+		form.insertAdjacentElement('beforebegin', newEl);
+	}
+	form.name = 'region' + i;
+	fixDepartureDate();
 	updateRegionsSelectOptions();
 	selectStorageRegions();
 	handleDestinationFocus();
