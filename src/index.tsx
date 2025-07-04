@@ -30,14 +30,17 @@ app.get(
 				let params = { uid: c.req.query('uid'), fareuid: c.req.query('fareuid') };
 				let taxData = await c.env.API.searchTax(params);
 				if (taxData.errorMessage) {
-					stream.mergeFragments(`<div id="tax-${params.uid}-${params.fareuid}">?</div>`);
+					stream.mergeFragments(`<div class="text-gray-700" id="tax-${params.uid}-${params.fareuid}">?</div>`);
 				} else {
 					let {
 						totals: {
 							totalBoardingTax: { money: moneyTax },
 						},
 					} = taxData;
-					stream.mergeFragments(`<div id="tax-${params.uid}-${params.fareuid}">$${Math.floor(moneyTax / 1000)}K</div>`);
+
+					stream.mergeFragments(
+						`<div class="text-gray-700" id="tax-${params.uid}-${params.fareuid}">$${Math.floor(moneyTax / 1000)}K</div>`,
+					);
 				}
 			},
 			{

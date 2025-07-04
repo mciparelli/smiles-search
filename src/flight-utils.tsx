@@ -200,12 +200,15 @@ async function streamResults({ c, stream }) {
 	url.pathname = '/flights';
 	let promises = [];
 	stream.mergeFragments(
-		<div id="results-wrapper" class="m-auto flex flex-col items-center">
-			<Spinner />
-			<p class="my-4" id="results-message">
-				Buscando resultados
-			</p>
-		</div>.toString());
+		(
+			<div id="results-wrapper" class="m-auto flex flex-col items-center py-8">
+				<Spinner size="large" />
+				<p class="mt-4 text-base text-gray-600" id="results-message">
+					Buscando vuelos...
+				</p>
+			</div>
+		).toString(),
+	);
 	for (let departureDate of body.date) {
 		for (let originAirportCode of body.origin) {
 			for (let destinationAirportCode of body.destination) {
@@ -214,36 +217,49 @@ async function streamResults({ c, stream }) {
 					departureDate,
 					originAirportCode,
 					destinationAirportCode,
-					forceCongener: body.onlyGol ? 'false' : 'true'
+					forceCongener: body.onlyGol ? 'false' : 'true',
 				});
 				let request = new Request(reqUrl);
-				let promise = c.env.API.fetch(request).then((res) => {
-					stream.mergeFragments(<p class="my-4" id="results-message">Buscando resultados ({originAirportCode}-{destinationAirportCode} {departureDate})</p>.toString());
-					if (!res.ok) return []
-					return res.json();
-				}).then(flights => flights.filter(someFlight => filterFlight({ someFlight, filters: body }))).catch(err => []);
-				if (body.date.length > 1) {
-					promise = promise.then((filteredFlights) => filteredFlights.sort(sortByMilesAndTaxes)[0]);
-				}
-				promises = [
-					...promises,
-					promise,
-				];
+				let promise = c.env.API.fetch(request)
+					.then((res) => {
+						stream.mergeFragments(
+							(
+								<p class="mt-4 text-base text-gray-600" id="results-message">
+									Buscando vuelos ({originAirportCode}-{destinationAirportCode} {departureDate})
+								</p>
+							).toString(),
+						);
+						if (!res.ok) return [];
+						return res.json();
+					})
+					.then((flights: any) => flights.filter((someFlight: any) => filterFlight({ someFlight, filters: body })))
+					.catch((err) => []);
+				promises = [...promises, promise];
 			}
 		}
 	}
-	let results = await Promise.all(promises).then(results => results.flat().filter(Boolean));
+	let results = await Promise.all(promises).then((results) => results.flat().filter(Boolean));
 	let sortedResults = results.sort(sortByMilesAndTaxes);
-	let finalResults = sortedResults.slice(0, body.qty);
+	let bestResultsPerDate = body.date
+		.map((date) => {
+			let flightsForDate = sortedResults.filter((flight) => new Date(flight.departureDate).toISOString().split('T')[0] === date);
+			return flightsForDate.length > 0 ? flightsForDate[0] : null;
+		})
+		.filter(Boolean);
+
+	let finalResults = bestResultsPerDate.slice(0, body.qty);
 	if (finalResults.length === 0) {
 		stream.mergeFragments(
-			<div id="results-wrapper" class="m-auto flex flex-col items-center">
-				<p id="results-message">
-					No se encontraron resultados
-				</p>
-			</div>.toString());
+			(
+				<div id="results-wrapper" class="m-auto flex flex-col items-center py-8">
+					<p id="results-message" class="text-gray-600">
+						No se encontraron resultados
+					</p>
+				</div>
+			).toString(),
+		);
 	} else {
-		stream.mergeFragments(<Results showMilesAndMoney={body.smilesAndMoney} flights={finalResults} />.toString());
+		stream.mergeFragments((<Results showMilesAndMoney={body.smilesAndMoney} flights={finalResults} />).toString());
 	}
 }
 

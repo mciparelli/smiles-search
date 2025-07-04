@@ -1,10 +1,19 @@
-export function Spinner() {
+interface SpinnerProps {
+	size?: 'small' | 'medium' | 'large';
+}
+
+export function Spinner({ size = 'medium' }: SpinnerProps = {}) {
+	const sizeClasses = {
+		small: 'w-4 h-4',
+		medium: 'w-6 h-6',
+		large: 'w-12 h-12',
+	};
+
 	return (
-		<div>
+		<div class="flex flex-col items-center">
 			<svg
 				aria-hidden="true"
-				class="w-6 h-6 text-gray-400 animate-spin"
-				fill="blue"
+				class={`${sizeClasses[size]} text-gray-200 animate-spin fill-primary`}
 				viewBox="0 0 100 101"
 				xmlns="http://www.w3.org/2000/svg"
 			>
