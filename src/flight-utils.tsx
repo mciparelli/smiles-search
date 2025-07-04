@@ -240,13 +240,18 @@ async function streamResults({ c, stream }) {
 	}
 	let results = await Promise.all(promises).then((results) => results.flat().filter(Boolean));
 	let sortedResults = results.sort(sortByMilesAndTaxes);
-	let bestResultsPerDate = body.date
-		.map((date) => {
-			let flightsForDate = sortedResults.filter((flight) => new Date(flight.departureDate).toISOString().split('T')[0] === date);
-			return flightsForDate.length > 0 ? flightsForDate[0] : null;
-		})
-		.filter(Boolean);
-
+	let bestResultsPerDate =
+		body.date.length > 1
+			? body.date
+					.map((date) =>
+						sortedResults.find((flight) => {
+							let flightDate = new Date(flight.departureDate);
+							return new Date(flightDate.getTime() - flightDate.getTimezoneOffset() * 60000).toISOString().split('T')[0] === date;
+						}),
+					)
+					.filter(Boolean)
+					.sort(sortByMilesAndTaxes)
+			: sortedResults;
 	let finalResults = bestResultsPerDate.slice(0, body.qty);
 	if (finalResults.length === 0) {
 		stream.mergeFragments(
