@@ -199,6 +199,7 @@ async function streamResults({ c, stream }) {
 	let url = new URL(stringUrl);
 	url.pathname = '/flights';
 	let promises = [];
+	const BATCH_SIZE = 10; // Limit concurrent requests
 	stream.mergeFragments(
 		(
 			<div id="results-wrapper" class="m-auto flex flex-col items-center py-8">
@@ -234,11 +235,17 @@ async function streamResults({ c, stream }) {
 					})
 					.then((flights: any) => flights.filter((someFlight: any) => filterFlight({ someFlight, filters: body })))
 					.catch((err) => []);
-				promises = [...promises, promise];
+				promises.push(promise);
 			}
 		}
 	}
-	let results = await Promise.all(promises).then((results) => results.flat().filter(Boolean));
+	// Process requests in batches to avoid overwhelming the API
+	let results = [];
+	for (let i = 0; i < promises.length; i += BATCH_SIZE) {
+		const batch = promises.slice(i, i + BATCH_SIZE);
+		const batchResults = await Promise.all(batch);
+		results.push(...batchResults.flat().filter(Boolean));
+	}
 	let sortedResults = results.sort(sortByMilesAndTaxes);
 	let bestResultsPerDate =
 		body.date.length > 1
