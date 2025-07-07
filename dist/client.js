@@ -72,6 +72,8 @@ function switchAirports() {
 	let origin = originEl.value;
 	originEl.value = destinationEl.value;
 	destinationEl.value = origin;
+	destinationEl.dispatchEvent(new CustomEvent('change'));
+	originEl.dispatchEvent(new CustomEvent('change'));
 	originEl.focus();
 }
 
@@ -81,7 +83,9 @@ function selectStorageRegions() {
 	if (dataStarData) {
 		let data = JSON.parse(dataStarData);
 		document.querySelector('[name=region_from]').value = data._regionFrom;
+		document.querySelector('[name=region_from]').dispatchEvent(new CustomEvent('change'));
 		document.querySelector('[name=region_to]').value = data._regionTo;
+		document.querySelector('[name=region_to]').dispatchEvent(new CustomEvent('change'));
 	}
 }
 
@@ -113,7 +117,6 @@ function allRegionsPopulated() {
 
 function addNewRegion() {
 	let regionsCount = document.querySelectorAll('form.region').length;
-	console.log(regionsCount);
 	let newEl = document.createElement('form');
 	newEl.name = `region${regionsCount + 1}`;
 	newEl.className = 'region grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 px-2 text-accent-content';
@@ -207,12 +210,11 @@ function fixDepartureDate() {
 	let currentDate = new Date(document.querySelector('[name=departureDate]').value);
 	if (currentDate < minDate) {
 		document.querySelector('[name=departureDate]').value = minDate.toISOString().split('T')[0];
+		document.querySelector('[name=departureDate]').dispatchEvent(new CustomEvent('change'));
 	}
 }
 
-/* restore from storage on page load */
-window.addEventListener('load', function () {
-	let regions = findOrPopulateRegions();
+function insertRegions(regions) {
 	let form = document.querySelector('form.region');
 	let i = 1;
 	for (let region in regions) {
@@ -226,6 +228,12 @@ window.addEventListener('load', function () {
 		form.insertAdjacentElement('beforebegin', newEl);
 	}
 	form.name = 'region' + i;
+}
+
+/* restore from storage on page load */
+window.addEventListener('load', function () {
+	let regions = findOrPopulateRegions();
+	insertRegions(regions);
 	fixDepartureDate();
 	updateRegionsSelectOptions();
 	selectStorageRegions();
